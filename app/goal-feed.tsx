@@ -5,7 +5,7 @@ import { View } from "react-native";
 
 export default function test() {
   return (
-    <Wrapper title="<GOAL_NAME> Feed" leftIcon='back'>
+    <Wrapper title="<GOAL_NAME> Feed" leftIcon='back' rightIcon='stats'>
       <View className="justify-center items-center h-full w-full">
         <Text>GOAL FEED</Text>
       </View>

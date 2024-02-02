@@ -28,7 +28,7 @@ function getIcon(iconName: String): IconSource {
         case "friends":
             return "account-group"
         case "stats":
-            return "leaderboard"
+            return "crown"
         default:
             return ""
     }
