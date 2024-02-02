@@ -1,5 +1,20 @@
 # Flaim App
 
+## Dev Startup
+>Make sure node@18 is installed
+
+### Install dependencies:
+```
+$ npm install && npm install -g typescript
+```
+
+### Run App:
+```
+$ npm start
+```
+> Running the app displays a QR code in the terminal, download Expo Go from the AppStore then open your camera app and scan the QR code to launch the app on your phone
+
+
 ## Scope:
 
 - App that holds two people (OR GROUP) accountable 
