@@ -50,7 +50,6 @@ export default function Wrapper(props: HeaderProps) {
     const rightIcon = props.rightIcon;
 
     const iconWidth = "w-1/5";
-
     return (
         <SafeAreaView style={{ backgroundColor: clr.background }} className={`flex-1 px-5 pt-4`}>
             <View className="flex-row items-center justify-between">

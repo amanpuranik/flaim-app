@@ -1,4 +1,3 @@
-//Make sure to add the same changes to tailwind.config.js
 export const colors = {
     light: {
         "primary": "#7845ac",
