@@ -3,33 +3,43 @@ import { Button, Text } from "react-native-paper";
 import Wrapper from "./components/Wrapper";
 import { View } from "react-native";
 import { router } from "expo-router";
-import { getFriends } from "./services/friendService";
+// import { getFriends } from "./services/friendService";
+import BottomTabs from "./components/friendsComponents/bottomTabs";
 
-export default function friends() {
-  const [friendsList, setFriendsList] = useState<any>([]);
+export default function Friends() {
+  const [activeTab, setActiveTab] = useState("friends");
+  // const [friendsList, setFriendsList] = useState<any>([]);
 
-  useEffect(() => {
-    const fetchFriends = async () => {
-      try {
-        const friends = await getFriends();
-        setFriendsList(friends);
-      } catch (error) {
-        console.error("Failed to fetch friends: ", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchFriends = async () => {
+  //     try {
+  //       const friends = await getFriends();
+  //       setFriendsList(friends);
+  //     } catch (error) {
+  //       console.error("Failed to fetch friends: ", error);
+  //     }
+  //   };
 
-    fetchFriends();
-  }, []);
+  //   fetchFriends();
+  // }, []);
+
+  const handleTabPress = (tabName: string) => {
+    console.log(tabName);
+    setActiveTab(tabName);
+  };
+
+  const friendsList = [{ name: "test" }];
 
   return (
     <Wrapper
-      title="Friends"
-      leftIcon="arrow-left"
-      leftIconAction={() => router.back()}
+      title="FLAIM"
+      rightIcon="arrow-right"
+      rightIconAction={() => router.push("/feed")}
     >
-      <View className="justify-center items-center h-full w-full">
-        <Text>FRIENDS</Text>
+      <View style={{ flex: 1 }}>
+        <Text>texst</Text>
       </View>
+      <BottomTabs onTabPress={handleTabPress} activeTab={activeTab} />
     </Wrapper>
   );
 }
