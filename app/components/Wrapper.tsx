@@ -30,7 +30,7 @@ function getIcon(iconName: String): IconSource {
     case "stats":
       return "crown";
     case "settings":
-      return "account-settings";
+      return "cog-outline";
     default:
       return "";
   }
@@ -119,7 +119,7 @@ export default function Wrapper(props: HeaderProps) {
         )}
         {rightIcon == "settings" && (
           <TouchableOpacity
-            onPress={() => props.openStats}
+            onPress={() => router.push("/settings")}
             className={iconWidth}
           >
             <IconButton
