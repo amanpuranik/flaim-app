@@ -22,7 +22,7 @@ export default function test() {
         <Text className="pt-4">bio will go her </Text>
         <Text className="pt-1">Link to profile</Text>
         <View style={{ flexDirection: 'row' }}>
-          <Text className="pt-10 pr-72 self-start ">Pinned posts aman</Text>
+          <Text className="pt-10 pr-72 self-start ">Pinned posts</Text>
         </View>
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <TouchableOpacity onPress={() => router.push("/goal")} className='mt-10 border-solid border-gray-300 rounded-3xl border-4 h-1/2 w-full bg-gray-300 h-32 w-32'>
