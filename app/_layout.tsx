@@ -52,7 +52,7 @@ function RootLayoutNav() {
 
   return (
     <PaperProvider theme={theme}>
-      <Stack screenOptions={{ headerShown: false }} initialRouteName='index'>
+      <Stack screenOptions={{ headerShown: false }}>
         {/* <Stack.Screen redirect name="[...missing]" /> */}
         <Stack.Screen name="index" />
         <Stack.Screen name="login" />
