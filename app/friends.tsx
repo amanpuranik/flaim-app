@@ -12,7 +12,7 @@ import Wrapper from "./components/Wrapper";
 import { router } from "expo-router";
 import ItemsList from "./components/friendsComponents/ItemsList";
 
-const screenWidth = Dimensions.get("window").width - 40;
+const screenWidth = Dimensions.get("window").width - 45;
 
 export default function Friends() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -90,12 +90,11 @@ export default function Friends() {
       rightIconAction={() => router.push("/feed")}
     >
       <View className="px-2 pb-3">
-        <View className="flex flex-row items-center rounded-lg bg-gray-200 p-2">
+        <View className="flex flex-row items-center rounded-lg bg-black p-2">
           <TextInput
-            className="flex-1 ml-4 text-white"
+            className="flex-1 ml-2 text-white"
             onChangeText={handleSearchChange}
-            placeholder="🔍  Add or search friends"
-            placeholderTextColor="gray-500"
+            placeholder="🔍 Add or search friends"
             value={searchQuery}
           />
         </View>
