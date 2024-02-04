@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useNavigation, useRootNavigation } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { TouchableOpacity, View } from "react-native";
@@ -7,6 +7,8 @@ import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../firebase";
 import { signOut } from "../helpers/auth";
+import { CommonActions } from "@react-navigation/native"
+
 
 type HeaderProps = {
     title?: String;
@@ -18,8 +20,18 @@ type HeaderProps = {
 };
 
 export default function Wrapper(props: HeaderProps) {
+    const navigation = useNavigation();
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                navigation.dispatch(CommonActions.reset({
+                    routes: [{ key: "login", name: "login" }]
+                }))
+            }
+        });
+    }, []);
 
-  let clr = useTheme().colors;
+    let clr = useTheme().colors;
 
     const iconWidth = "w-1/5";
     return (

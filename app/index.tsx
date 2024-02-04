@@ -27,7 +27,7 @@ export default function index() {
     if (initializing) {
         return <Loading />
     } else {
-        return user ? <Redirect href={"/feed"}/> : <Redirect href={"/login"}/> 
+        return user ? <Redirect href={"/feed"} /> : <Redirect href={"/login"} />
     }
 };
 
