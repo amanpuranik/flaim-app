@@ -3,6 +3,8 @@ import { Button, Text } from 'react-native-paper';
 import Wrapper from './components/Wrapper';
 import { View } from "react-native";
 import { router } from "expo-router";
+import { signOut } from './helpers/auth';
+
 
 
 export default function test() {

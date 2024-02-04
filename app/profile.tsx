@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Text } from 'react-native-paper';
 import Wrapper from './components/Wrapper';
-import { signOut } from './helpers/auth';
 import { Avatar } from 'react-native-paper';
 import { router } from 'expo-router';
 import { TouchableOpacity, View } from 'react-native';
