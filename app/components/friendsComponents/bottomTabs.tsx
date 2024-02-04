@@ -26,7 +26,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({ onTabPress, activeTab }) => {
   };
 
   return (
-    <View className={`flex-row bg-black p-1 rounded-xl m-3 shadow-lg mb-6`}>
+    <View className="flex-row absolute bottom-0 left-0 bg-black right-0 rounded-xl p-1 m-3 mb-6">
       {renderTab("friends", "Friends")}
       {renderTab("requests", "Requests")}
     </View>
