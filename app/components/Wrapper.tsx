@@ -9,129 +9,55 @@ import { auth } from "../../firebase";
 import { signOut } from "../helpers/auth";
 
 type HeaderProps = {
-  title?: String;
-  leftIcon?: "back" | "close" | "friends";
-  rightIcon?: "profile" | "stats" | "settings";
-  closeFunction?: () => void;
-  openStats?: () => void;
-  children: any;
+    title?: String;
+    leftIcon?: IconSource;
+    rightIcon?: IconSource;
+    leftIconAction?: () => void;
+    rightIconAction?: () => void;
+    children: any;
 };
 
-function getIcon(iconName: String): IconSource {
-  switch (iconName) {
-    case "close":
-      return "close";
-    case "back":
-      return "arrow-left";
-    case "profile":
-      return "account";
-    case "friends":
-      return "account-group";
-    case "stats":
-      return "crown";
-    case "settings":
-      return "account-settings";
-    default:
-      return "";
-  }
-}
-
 export default function Wrapper(props: HeaderProps) {
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        signOut();
-        router.replace("/login");
-      }
-    });
-  }, []);
 
   let clr = useTheme().colors;
 
-  const leftIcon = props.leftIcon;
-  const rightIcon = props.rightIcon;
+    const iconWidth = "w-1/5";
+    return (
+        <SafeAreaView
+            style={{ backgroundColor: clr.background }}
+            className={`flex-1 px-5 pt-4`}
+        >
+            <View className="flex-row items-center justify-between">
+                {props.leftIcon && (
+                    <TouchableOpacity onPress={props.leftIconAction} className={iconWidth}>
+                        <IconButton
+                            icon={props.leftIcon!}
+                            iconColor={clr.primary}
+                            size={32}
+                        />
+                    </TouchableOpacity>
+                )}
 
-  const iconWidth = "w-1/5";
-  return (
-    <SafeAreaView
-      style={{ backgroundColor: clr.background }}
-      className={`flex-1 px-5 pt-4`}
-    >
-      <View className="flex-row items-center justify-between">
-        {leftIcon == "back" && (
-          <TouchableOpacity onPress={() => router.back()} className={iconWidth}>
-            <IconButton
-              icon={getIcon(leftIcon)}
-              iconColor={clr.primary}
-              size={32}
-            />
-          </TouchableOpacity>
-        )}
-        {leftIcon == "close" && (
-          <TouchableOpacity
-            onPress={() => props.closeFunction}
-            className={iconWidth}
-          >
-            <IconButton
-              icon={getIcon(leftIcon)}
-              iconColor={clr.primary}
-              size={32}
-            />
-          </TouchableOpacity>
-        )}
-        {leftIcon == "friends" && (
-          <TouchableOpacity
-            onPress={() => router.push("/friends")}
-            className={iconWidth}
-          >
-            <IconButton
-              icon={getIcon(leftIcon)}
-              iconColor={clr.primary}
-              size={32}
-            />
-          </TouchableOpacity>
-        )}
-        {!leftIcon && <View className={iconWidth}></View>}
-        {props.title && <Text variant={"headlineSmall"}>{props.title}</Text>}
-        {rightIcon == "profile" && (
-          <TouchableOpacity
-            onPress={() => router.push("/profile")}
-            className={iconWidth}
-          >
-            <IconButton
-              icon={getIcon(rightIcon)}
-              iconColor={clr.primary}
-              size={32}
-            />
-          </TouchableOpacity>
-        )}
-        {rightIcon == "stats" && (
-          <TouchableOpacity
-            onPress={() => props.openStats}
-            className={iconWidth}
-          >
-            <IconButton
-              icon={getIcon(rightIcon)}
-              iconColor={clr.primary}
-              size={32}
-            />
-          </TouchableOpacity>
-        )}
-        {rightIcon == "settings" && (
-          <TouchableOpacity
-            onPress={() => props.openStats}
-            className={iconWidth}
-          >
-            <IconButton
-              icon={getIcon(rightIcon)}
-              iconColor={clr.primary}
-              size={32}
-            />
-          </TouchableOpacity>
-        )}
-        {!rightIcon && <View className={iconWidth}></View>}
-      </View>
-      {props.children}
-    </SafeAreaView>
-  );
+                {!props.leftIcon && <View className={iconWidth}></View>}
+
+                {props.title && <Text variant={"headlineSmall"}>{props.title}</Text>}
+
+                {props.rightIcon && (
+                    <TouchableOpacity
+                        onPress={props.rightIconAction}
+                        className={iconWidth}
+                    >
+                        <IconButton
+                            icon={props.rightIcon!}
+                            iconColor={clr.primary}
+                            size={32}
+                        />
+                    </TouchableOpacity>
+                )}
+
+                {!props.rightIcon && <View className={iconWidth}></View>}
+            </View>
+            {props.children}
+        </SafeAreaView>
+    );
 }

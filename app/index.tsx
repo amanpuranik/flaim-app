@@ -4,6 +4,7 @@ import Feed from "./feed";
 import Login from "./login";
 import { useEffect, useState } from 'react';
 import Loading from './components/Loading';
+import { Redirect, router } from 'expo-router';
 
 export default function index() {
     const auth = getAuth();
@@ -26,7 +27,7 @@ export default function index() {
     if (initializing) {
         return <Loading />
     } else {
-        return user ? <Feed /> : <Login />
+        return user ? <Redirect href={"/feed"}/> : <Redirect href={"/login"}/> 
     }
 };
 

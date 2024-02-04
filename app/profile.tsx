@@ -4,13 +4,14 @@ import Wrapper from './components/Wrapper';
 import { View } from "react-native";
 import { signOut } from './helpers/auth';
 import { Avatar } from 'react-native-elements';
+import { router } from 'expo-router';
 
 
 
 export default function test() {
   // Render initials for now, we'll deal with image logic later
   return (
-    <Wrapper title="Profile" leftIcon='back' rightIcon='settings'>
+    <Wrapper title="Profile" leftIcon='arrow-left' leftIconAction={router.back} rightIcon='account-settings'>
       <View className="items-center h-full w-full">
         <Avatar
           size="large"

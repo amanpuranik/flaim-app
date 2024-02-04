@@ -54,7 +54,7 @@ function RootLayoutNav() {
     <PaperProvider theme={theme}>
       <Stack screenOptions={{ headerShown: false }} initialRouteName='index'>
         {/* <Stack.Screen redirect name="[...missing]" /> */}
-        <Stack.Screen name="index" />
+        {/* <Stack.Screen name="index" />
         <Stack.Screen name="login" />
         <Stack.Screen name="register" />
         <Stack.Screen name="feed" />
@@ -63,7 +63,7 @@ function RootLayoutNav() {
         <Stack.Screen name="goal-feed" />
         <Stack.Screen name="goal" />
         <Stack.Screen name="create-goal" />
-        <Stack.Screen name="edit-goal" />
+        <Stack.Screen name="edit-goal" /> */}
       </Stack>
     </PaperProvider>
   );
