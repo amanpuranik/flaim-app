@@ -29,6 +29,8 @@ function getIcon(iconName: String): IconSource {
             return "account-group"
         case "stats":
             return "crown"
+        case "settings":
+            return "account-settings"
         default:
             return ""
     }
@@ -97,6 +99,15 @@ export default function Wrapper(props: HeaderProps) {
                     </TouchableOpacity>
                 }
                 {rightIcon == "stats" &&
+                    <TouchableOpacity onPress={() => props.openStats} className={iconWidth}>
+                        <IconButton
+                            icon={getIcon(rightIcon)}
+                            iconColor={clr.primary}
+                            size={32}
+                        />
+                    </TouchableOpacity>
+                }
+                {rightIcon == "settings" &&
                     <TouchableOpacity onPress={() => props.openStats} className={iconWidth}>
                         <IconButton
                             icon={getIcon(rightIcon)}
