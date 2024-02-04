@@ -6,9 +6,6 @@ import {
 } from "firebase/auth";
 import { auth } from "../../firebase";
 import { AuthResponse } from "../constants/types";
-import { useEffect, useState } from "react";
-import * as store from "../helpers/store";
-import { router } from "expo-router";
 
 export async function signup(
   email: string,
@@ -91,7 +88,6 @@ export async function signin(
 
 export function signOut() {
   auth.signOut();
-  router.replace("/login");
 }
 
 // export function getUser() {

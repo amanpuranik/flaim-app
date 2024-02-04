@@ -3,7 +3,7 @@ import { Text, useTheme } from 'react-native-paper';
 import { useState } from 'react';
 import Wrapper from './components/Wrapper';
 import { TouchableOpacity, View } from 'react-native';
-import { router } from 'expo-router';
+import { router, useSegments } from 'expo-router';
 
 
 export default function Feed() {
