@@ -11,7 +11,7 @@ import { signOut } from "../helpers/auth";
 type HeaderProps = {
   title?: String;
   leftIcon?: "back" | "close" | "friends";
-  rightIcon?: "profile" | "stats";
+  rightIcon?: "profile" | "stats" | "settings";
   closeFunction?: () => void;
   openStats?: () => void;
   children: any;
@@ -29,6 +29,8 @@ function getIcon(iconName: String): IconSource {
       return "account-group";
     case "stats":
       return "crown";
+    case "settings":
+      return "account-settings";
     default:
       return "";
   }
@@ -50,7 +52,6 @@ export default function Wrapper(props: HeaderProps) {
   const rightIcon = props.rightIcon;
 
   const iconWidth = "w-1/5";
-
   return (
     <SafeAreaView
       style={{ backgroundColor: clr.background }}
@@ -105,6 +106,18 @@ export default function Wrapper(props: HeaderProps) {
           </TouchableOpacity>
         )}
         {rightIcon == "stats" && (
+          <TouchableOpacity
+            onPress={() => props.openStats}
+            className={iconWidth}
+          >
+            <IconButton
+              icon={getIcon(rightIcon)}
+              iconColor={clr.primary}
+              size={32}
+            />
+          </TouchableOpacity>
+        )}
+        {rightIcon == "settings" && (
           <TouchableOpacity
             onPress={() => props.openStats}
             className={iconWidth}
