@@ -12,9 +12,8 @@ const BottomTabs: React.FC<BottomTabsProps> = ({ onTabPress, activeTab }) => {
     return (
       <TouchableOpacity
         onPress={() => onTabPress(tabName)}
-        className={`flex-1 items-center p-2 ${
-          isActive ? "bg-gray-800 rounded-lg" : ""
-        }`}
+        className={`flex-1 items-center p-2 ${isActive ? "bg-gray-800 rounded-lg" : ""
+          }`}
       >
         <Text
           className={`text-white text-center ${isActive ? "font-bold" : ""}`}

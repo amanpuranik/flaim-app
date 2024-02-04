@@ -16,7 +16,7 @@ const ItemsList: React.FC<ItemsListProps> = ({ name, username, onRemove }) => {
         <View className={`flex-row items-center`}>
           <Image
             className={`w-12 h-12 rounded-full mr-4`}
-            source={{ uri: "path_to_profile_picture" }} // Replace with actual image URI
+            source={require("../../../assets/images/favicon.png")} // Replace with actual image URI
           />
           <View>
             <Text className={`text-white font-bold`}>{name}</Text>

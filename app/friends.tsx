@@ -7,10 +7,10 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
-import BottomTabs from "./components/friendsComponents/BottomTabs";
+import BottomTabs from "./components/friends/BottomTabs";
 import Wrapper from "./components/Wrapper";
 import { router } from "expo-router";
-import ItemsList from "./components/friendsComponents/ItemsList";
+import ItemsList from "./components/friends/ItemsList";
 
 const screenWidth = Dimensions.get("window").width - 45;
 
@@ -61,7 +61,7 @@ export default function Friends() {
     { name: "suban", username: "ahmed" },
   ];
 
-  const renderFriendItem = ({ item }) => (
+  const renderFriendItem = ({ item }: any) => (
     <ItemsList
       name={item.name}
       username={item.username}
@@ -72,7 +72,7 @@ export default function Friends() {
     />
   );
 
-  const renderRequestItem = ({ item }) => (
+  const renderRequestItem = ({ item }: any) => (
     <ItemsList
       name={item.name}
       username={item.username}
