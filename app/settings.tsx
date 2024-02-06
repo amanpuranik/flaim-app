@@ -7,7 +7,7 @@ import { signOut } from './helpers/auth';
 
 
 
-export default function test() {
+export default function settings() {
   return (
     <Wrapper title="Settings" leftIcon='arrow-left' leftIconAction={router.back}>
       <View className="justify-center items-center h-full w-full">
