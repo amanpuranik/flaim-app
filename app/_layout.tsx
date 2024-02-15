@@ -61,6 +61,7 @@ function RootLayoutNav() {
         <Stack.Screen name="profile" />
         <Stack.Screen name="friends" />
         <Stack.Screen name="settings" />
+        <Stack.Screen name="edit-profile" />
         <Stack.Screen name="goal-feed" />
         <Stack.Screen name="goal" />
         <Stack.Screen name="create-goal" />
