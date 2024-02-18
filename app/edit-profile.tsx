@@ -6,11 +6,44 @@ import { router } from "expo-router";
 import { signOut } from './helpers/auth';
 import { Avatar } from 'react-native-paper';
 
+import { useActionSheet } from '@expo/react-native-action-sheet';
+
+
+
 export default function editProfile() {
 
     const userName = "brownaman"
     const email = "amanpuranik@yahoo.ca"
     const name = "Aman Puranik"
+
+    const { showActionSheetWithOptions } = useActionSheet();
+
+
+    const onPress = () => {
+
+        console.log('function called')
+        const options = ['Upload from camera roll', 'Take picture', 'Cancel'];
+        const destructiveButtonIndex = 0;
+        const cancelButtonIndex = 2;
+
+        showActionSheetWithOptions({
+            options
+        }, (selectedIndex) => {
+            switch (selectedIndex) {
+                case 0:
+                    console.log('case1')
+                    break;
+
+                case 1:
+                    // Delete
+                    break;
+
+                case 2:
+                // Canceled
+            }
+        });
+    }
+
 
     return (
         <Wrapper title="Edit profile" leftIcon='arrow-left' leftIconAction={router.back}>
@@ -19,6 +52,7 @@ export default function editProfile() {
                 <View style={{ position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
                     <Avatar.Image source={require('../assets/images/profilepic.jpeg')} size={96} />
                     <TouchableOpacity
+                        onPress={onPress}
                         style={{
                             position: 'absolute',
                             alignItems: 'center',
@@ -33,10 +67,6 @@ export default function editProfile() {
                         <IconButton
                             icon="pencil"
                             size={24}
-                            onPress={() => {
-                                console.log("edit profile picture pressed")
-                                // Handle edit action
-                            }}
                         />
                     </TouchableOpacity>
                 </View>

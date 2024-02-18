@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { PaperProvider, } from 'react-native-paper';
 import { lightTheme, darkTheme } from './constants/theme';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import React from 'react';
 
 export {
@@ -53,21 +54,24 @@ function RootLayoutNav() {
 
   return (
     <PaperProvider theme={theme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen redirect name="[...missing]" /> */}
-        <Stack.Screen name="index" />
-        <Stack.Screen name="login" />
-        <Stack.Screen name="register" />
-        <Stack.Screen name="feed" />
-        <Stack.Screen name="profile" />
-        <Stack.Screen name="friends" />
-        <Stack.Screen name="settings" />
-        <Stack.Screen name="edit-profile" />
-        <Stack.Screen name="goal-feed" />
-        <Stack.Screen name="goal" />
-        <Stack.Screen name="create-goal" />
-        <Stack.Screen name="edit-goal" />
-      </Stack>
+      <ActionSheetProvider>
+
+        <Stack screenOptions={{ headerShown: false }}>
+          {/* <Stack.Screen redirect name="[...missing]" /> */}
+          <Stack.Screen name="index" />
+          <Stack.Screen name="login" />
+          <Stack.Screen name="register" />
+          <Stack.Screen name="feed" />
+          <Stack.Screen name="profile" />
+          <Stack.Screen name="friends" />
+          <Stack.Screen name="settings" />
+          <Stack.Screen name="edit-profile" />
+          <Stack.Screen name="goal-feed" />
+          <Stack.Screen name="goal" />
+          <Stack.Screen name="create-goal" />
+          <Stack.Screen name="edit-goal" />
+        </Stack>
+      </ActionSheetProvider>
     </PaperProvider>
   );
 }
