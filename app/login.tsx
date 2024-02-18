@@ -8,8 +8,10 @@ import {
   IconButton,
 } from "react-native-paper";
 import { router } from "expo-router";
-import { signin } from "./helpers/auth";
-import { AuthResponse } from "./constants/types";
+import { signin } from "./services/auth";
+import { AuthResponse, FlaimUser } from "./constants/types";
+import { db_GetCurrentUser } from "./services/db/userService";
+import useUserStore from "./services/store/userStore";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -17,6 +19,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [loginBtnText, setLoginBtnText] = useState("Login");
   const [loginError, setLoginError] = useState<String>("");
+
+  const { setCurrentUser } = useUserStore()
 
   let clr = useTheme().colors;
 
@@ -32,6 +36,8 @@ export default function Login() {
         console.log(response.errorMessage);
         setLoginError(response.errorMessage);
       } else {
+        const flaimUser: FlaimUser | undefined = await db_GetCurrentUser();
+        setCurrentUser(flaimUser);
         router.replace("/feed");
       }
       setLoading(false);

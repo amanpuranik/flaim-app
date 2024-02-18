@@ -1,13 +1,14 @@
 import { router, useNavigation, useRootNavigation } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { IconButton, Text, useTheme } from "react-native-paper";
 import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../firebase";
-import { signOut } from "../helpers/auth";
+import { signOut } from "../services/auth";
 import { CommonActions } from "@react-navigation/native"
+import React from "react";
 
 
 type HeaderProps = {

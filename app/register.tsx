@@ -8,8 +8,10 @@ import {
   useTheme,
 } from "react-native-paper";
 import { router } from "expo-router";
-import { AuthResponse } from "./constants/types";
-import { signup } from "./helpers/auth";
+import { AuthResponse, FlaimUser } from "./constants/types";
+import { signup } from "./services/auth";
+import { db_GetCurrentUser } from "./services/db/userService";
+import useUserStore from "./services/store/userStore";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -19,6 +21,8 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [regBtnText, setRegBtnText] = useState("Register");
   const [regError, setRegError] = useState<String>("");
+
+  const { setCurrentUser } = useUserStore()
 
   let clr = useTheme().colors;
 
@@ -34,6 +38,8 @@ export default function Register() {
         console.log(response.errorMessage);
         setRegError(response.errorMessage);
       } else {
+        const flaimUser: FlaimUser | undefined = await db_GetCurrentUser();
+        setCurrentUser(flaimUser);
         router.replace("/feed");
       }
       setLoading(false);

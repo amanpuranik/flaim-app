@@ -1,18 +1,21 @@
 import {
-  User,
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
+  signInWithEmailAndPassword
 } from "firebase/auth";
 import { auth } from "../../firebase";
-import { AuthResponse } from "../constants/types";
+import { AuthResponse, FlaimUser } from "../constants/types";
+import { db_CreateUser } from "./db/userService";
+import useUserStore from "./store/userStore";
+import { Timestamp } from "firebase/firestore";
 
-export async function signup(
-  email: string,
-  password: string
-): Promise<AuthResponse> {
+export async function signup(email: string, password: string): Promise<AuthResponse> {
   try {
+    const user: FlaimUser = buildUserWithDefaultFields("username", "FIRST", "LAST", email);
     const t = await createUserWithEmailAndPassword(auth, email, password);
+    user.uid = auth.currentUser?.uid!;
+
+    db_CreateUser(user);
+
     return {
       token: t,
       error: false,
@@ -45,10 +48,7 @@ export async function signup(
   }
 }
 
-export async function signin(
-  email: string,
-  password: string
-): Promise<AuthResponse> {
+export async function signin(email: string, password: string): Promise<AuthResponse> {
   try {
     const t = await signInWithEmailAndPassword(auth, email, password);
     return {
@@ -90,21 +90,20 @@ export function signOut() {
   auth.signOut();
 }
 
-// export function getUser() {
-//     const [user, setUser] = useState<User>();
-//     useEffect(() => {
-//         const unsubscribeFromAuthStatuChanged = onAuthStateChanged(auth, (user) => {
-//             if (user) {
-//                 // User is signed in, see docs for a list of available properties
-//                 setUser(user);
-//             } else {
-//                 // User is signed out
-//                 setUser(undefined);
-//             }
-//         });
-//         return unsubscribeFromAuthStatuChanged;
-//     }, []);
-//     return {
-//         user
-//     };
-// }
+const buildUserWithDefaultFields = (username: string, firstName: string, lastName: string, email: string): FlaimUser => {
+  return {
+    uid: "",
+    username,
+    firstName,
+    lastName,
+    email,
+    bio: "",
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+    friendUids: [],
+    incomingRequests: [],
+    outgoingRequests: [],
+    profilePictureUrl: "DEFAULT PICTURE URI",
+    pinnedGoals: []
+  }
+}
