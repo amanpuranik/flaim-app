@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { PaperProvider, } from 'react-native-paper';
 import { lightTheme, darkTheme } from './constants/theme';
+import React from 'react';
 
 export {
   // Catch any errors thrown by the Layout component.
