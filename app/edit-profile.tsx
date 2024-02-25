@@ -5,6 +5,8 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { router } from "expo-router";
 import { signOut } from './helpers/auth';
 import { Avatar } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+
 
 import { useActionSheet } from '@expo/react-native-action-sheet';
 
@@ -15,6 +17,7 @@ export default function editProfile() {
     const userName = "brownaman"
     const email = "amanpuranik@yahoo.ca"
     const name = "Aman Puranik"
+    const navigation = useNavigation()
 
     const { showActionSheetWithOptions } = useActionSheet();
 
@@ -22,7 +25,7 @@ export default function editProfile() {
     const onPress = () => {
 
         console.log('function called')
-        const options = ['Upload from camera roll', 'Take picture', 'Cancel'];
+        const options = ['Take picture', 'Upload from camera roll', 'Cancel'];
         const destructiveButtonIndex = 0;
         const cancelButtonIndex = 2;
 
@@ -32,6 +35,7 @@ export default function editProfile() {
             switch (selectedIndex) {
                 case 0:
                     console.log('case1')
+                    openCamera();
                     break;
 
                 case 1:
@@ -44,6 +48,9 @@ export default function editProfile() {
         });
     }
 
+    const openCamera = () => {
+        navigation.navigate('camera')
+    }
 
     return (
         <Wrapper title="Edit profile" leftIcon='arrow-left' leftIconAction={router.back}>

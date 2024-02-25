@@ -70,6 +70,8 @@ function RootLayoutNav() {
           <Stack.Screen name="goal" />
           <Stack.Screen name="create-goal" />
           <Stack.Screen name="edit-goal" />
+          <Stack.Screen name="camera" />
+
         </Stack>
       </ActionSheetProvider>
     </PaperProvider>
