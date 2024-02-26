@@ -3,12 +3,12 @@ import { Button, Text, TextInput, IconButton } from 'react-native-paper';
 import Wrapper from './components/Wrapper';
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { router } from "expo-router";
-import { signOut } from './helpers/auth';
 import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import FlatTextInput from './components/FlatTextInput';
 
 
 
@@ -79,20 +79,14 @@ export default function editProfile() {
                 </View>
 
 
-                <TextInput
-                    className="mt-8"
+                <FlatTextInput
                     placeholder={userName}
-                    style={{ height: 40, width: 250 }}
                 />
-                <TextInput
-                    className="mt-8"
+                <FlatTextInput
                     placeholder={email}
-                    style={{ height: 40, width: 250 }}
                 />
-                <TextInput
-                    className="mt-8"
+                <FlatTextInput
                     placeholder={name}
-                    style={{ height: 40, width: 250 }}
                 />
 
             </View>
