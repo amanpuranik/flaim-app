@@ -14,7 +14,7 @@ export async function signup(email: string, password: string): Promise<AuthRespo
     const t = await createUserWithEmailAndPassword(auth, email, password);
     user.uid = auth.currentUser?.uid!;
 
-    db_CreateUser(user);
+    await db_CreateUser(user);
 
     return {
       token: t,

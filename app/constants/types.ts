@@ -27,7 +27,7 @@ export type Goal = {
     uid: string;
     name: string;
     tag?: string;
-    isPrivate: boolean;
+    visibility: 'collaborators' | 'friends';
     isApprovalOpen: boolean;
     reward?: string;
     goalEndDate: Date;

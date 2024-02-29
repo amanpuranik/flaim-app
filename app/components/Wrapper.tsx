@@ -38,9 +38,9 @@ export default function Wrapper(props: HeaderProps) {
     return (
         <SafeAreaView
             style={{ backgroundColor: clr.background }}
-            className={`flex-1 px-5 pt-4`}
+            className={`flex-1 pt-4`}
         >
-            <View className="flex-row items-center justify-between">
+            <View className="px-5 flex-row items-center justify-between">
                 {props.leftIcon && (
                     <TouchableOpacity onPress={props.leftIconAction} className={iconWidth}>
                         <IconButton
@@ -53,7 +53,7 @@ export default function Wrapper(props: HeaderProps) {
 
                 {!props.leftIcon && <View className={iconWidth}></View>}
 
-                {props.title && <Text variant={"headlineSmall"}>{props.title}</Text>}
+                {props.title && <Text className="flex-wrap w-44 text-center" variant={"headlineSmall"}>{props.title}</Text>}
 
                 {props.rightIcon && (
                     <TouchableOpacity

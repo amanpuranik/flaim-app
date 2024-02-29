@@ -18,8 +18,8 @@ export default function settings() {
   return (
     <Wrapper title="Settings" leftIcon='arrow-left' leftIconAction={router.back}>
       <View className="justify-center items-center h-full w-full">
-        <Text>settings</Text>
-        <Button className='mt-60' mode='contained' onPress={() => removeUserAndSignout()}>Sign Out</Button>
+        <Button contentStyle={{ height: 50 }} className='mt-60 w-5/6' mode='contained' onPress={() => router.push("/db-tester")}>DB Testert</Button>
+        <Button contentStyle={{ height: 50 }} className='mt-5 w-5/6' mode='contained' onPress={() => removeUserAndSignout()}>Sign Out</Button>
 
       </View>
     </Wrapper >

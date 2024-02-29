@@ -1,4 +1,4 @@
-import { View, KeyboardAvoidingView, TouchableOpacity } from "react-native";
+import { View, KeyboardAvoidingView, TouchableOpacity, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -12,6 +12,7 @@ import { AuthResponse, FlaimUser } from "./constants/types";
 import { signup } from "./services/auth";
 import { db_GetCurrentUser } from "./services/db/userService";
 import useUserStore from "./services/store/userStore";
+import FlatTextInput from "./components/FlatTextInput";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -52,86 +53,67 @@ export default function Register() {
 
   return (
     <KeyboardAvoidingView
+      behavior="padding"
       style={{ backgroundColor: clr.background }}
-      className={`justify-center items-center h-full w-full`}
+      className={`flex-1 justify-center items-center h-full w-full`}
     >
-      <View className="flex-row items-center">
-        <Text className="font-semibold" variant="displayMedium">
-          Register
-        </Text>
-        <IconButton icon="account-plus" iconColor={clr.primary} size={48} />
-      </View>
-      <TextInput
-        style={{ backgroundColor: clr.surfaceVariant }}
-        className="w-5/6 mt-10 h-14"
-        placeholder="Email"
-        returnKeyType="done"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-        error={true}
-        autoCapitalize="none"
-        autoComplete="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-        mode="outlined"
-        outlineColor={clr.primary}
-        outlineStyle={{ borderRadius: 10, borderWidth: 0 }}
-      />
-
-      <TextInput
-        style={{ backgroundColor: clr.surfaceVariant }}
-        className="w-5/6 mt-3 h-14"
-        placeholder="Password"
-        returnKeyType="done"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        error={false}
-        secureTextEntry
-        mode="outlined"
-        outlineColor={clr.primary}
-        outlineStyle={{ borderRadius: 10, borderWidth: 0 }}
-      />
-      {/* <TextInput
-                style={{ backgroundColor: clr.surfaceVariant }}
-                className={`w-5/6 mt-3 h-14`}
-                placeholder='Confirm Password...'
-                returnKeyType="done"
-                value={confirmPassword}
-                onChangeText={text => setPassword(text)}
-                error={false}
-                secureTextEntry
-                mode='outlined'
-                outlineColor={clr.primary}
-                outlineStyle={{ borderRadius: 10, borderWidth: 0 }}
-            /> */}
-      {regError && (
-        <Text
-          style={{ color: clr.error }}
-          className="w-2/3 text-center text-xs mt-1"
-        >
-          {regError}
-        </Text>
-      )}
-      <Button
-        loading={loading}
-        contentStyle={{ height: 50 }}
-        className="w-3/4 mt-5"
-        mode="contained"
-        onPress={() => register()}
-      >
-        {regBtnText}
-      </Button>
-      <View className="flex-row mt-5">
-        <Text className="font-bold">Already have an account? </Text>
-        <TouchableOpacity
-          onPress={() => router.replace("/login")}
-          className="items-center"
-        >
-          <Text style={{ color: clr.primary }} className="font-bold">
-            Login
+      <View className="justify-center items-center w-11/12">
+        <View className="flex-row items-center">
+          <Text className="font-semibold" variant="displayMedium">
+            Register
           </Text>
-        </TouchableOpacity>
+          <IconButton icon="account-plus" iconColor={clr.primary} size={48} />
+        </View>
+        <FlatTextInput
+          placeholder="Email..."
+          returnKeyType="done"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          error={false}
+          autoCapitalize="none"
+          autoComplete="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+        />
+        <FlatTextInput
+          placeholder="Password..."
+          returnKeyType="done"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          error={false}
+          textContentType="newPassword"
+          secureTextEntry
+        />
+        {regError && (
+          <Text
+            style={{ color: clr.error }}
+            className="w-2/3 text-center text-xs mt-1"
+          >
+            {regError}
+          </Text>
+        )}
+        <Button
+          loading={loading}
+          contentStyle={{ height: 50 }}
+          className="w-3/4 mt-5"
+          mode="contained"
+          onPress={() => register()}
+        >
+          {regBtnText}
+        </Button>
+        <View className="flex-row mt-5">
+          <Text className="font-bold">Already have an account? </Text>
+          <TouchableOpacity
+            onPress={() => router.replace("/login")}
+            className="items-center"
+          >
+            <Text style={{ color: clr.primary }} className="font-bold">
+              Login
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
+
     </KeyboardAvoidingView>
   );
 }
