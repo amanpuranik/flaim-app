@@ -1,5 +1,6 @@
 import { arrayRemove, arrayUnion, doc, getDoc, writeBatch } from "firebase/firestore";
 import { auth, fs } from "../../../firebase";
+import { FlaimUser } from "../../constants/types";
 
 //SEND FRIEND REQUEST
 export const db_SendFriendRequest = async (requestedUid: string) => {
@@ -25,10 +26,12 @@ export const db_AcceptFriendRequest = async (requesterUid: string) => {
 
     const batch = writeBatch(fs);
     batch.update(userRef, {
-        incomingRequests: arrayRemove(requesterUid)
+        incomingRequests: arrayRemove(requesterUid),
+        friendUids: arrayUnion(requesterUid)
     })
     batch.update(requesterRef, {
-        outgoingRequests: arrayUnion(currentUserUid)
+        outgoingRequests: arrayUnion(currentUserUid),
+        friendUids: arrayUnion(currentUserUid)
     })
     batch.commit();
 }
@@ -50,7 +53,7 @@ export const db_RemoveFriend = async (uid: string) => {
 }
 
 //GET MUTUAL FRIENDS
-export const db_GetFriendRecommendations = async (currentUserFriends: string[]) => {
+export const db_GetFriendRecommendations = async (currentUserFriends: string[]): Promise<FlaimUser[]> => {
     const friendsOfFriends = [];
     for (const friendUid of currentUserFriends) {
         const friendRef = doc(fs, "users", friendUid);

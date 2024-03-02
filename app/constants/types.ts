@@ -54,9 +54,15 @@ export type GoalComment = {
     uid: string;
     userUid: string;
     comment: string;
-    likes: number;
+    likes: CommentLike[];
     updatedAt: Timestamp;
     createdAt: Timestamp;
+}
+
+export type CommentLike = {
+    uid: string;
+    userUid: string;
+    isLiked: boolean;
 }
 
 export type GoalApproval = {

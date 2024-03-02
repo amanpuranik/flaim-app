@@ -1,4 +1,4 @@
-import { DocumentData, DocumentSnapshot, collection, doc, getDocs, orderBy, query, setDoc, where } from "firebase/firestore";
+import { DocumentData, DocumentSnapshot, collection, doc, getDoc, getDocs, orderBy, query, setDoc, where } from "firebase/firestore";
 import { fs } from "../../../firebase";
 import { FlaimUser, Goal } from "../../constants/types";
 import useUserStore from "../store/userStore";
@@ -13,6 +13,18 @@ export const db_CreateGoal = async (goal: Goal) => {
 export const db_UpdateGoal = async (goal: Goal) => {
     const goalRef = doc(fs, "goals", goal.uid)
     await setDoc(goalRef, goal, { merge: true });
+}
+
+export const db_GetGoal = async (goalUid: string): Promise<Goal | undefined> => {
+    const goalRef = doc(fs, "goals", goalUid);
+    const goalSnap = await getDoc(goalRef);
+
+    if (goalSnap.exists()) {
+        const goal: Goal = { ...goalSnap.data() as Goal }
+        return goal;
+    } else {
+        return undefined;
+    }
 }
 
 //GET GOALS FOR FEED
