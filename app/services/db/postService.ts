@@ -1,20 +1,19 @@
-import { Timestamp, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { Timestamp, doc, writeBatch } from "firebase/firestore";
 import { fs } from "../../../firebase";
-import { GoalComment, GoalPost } from "../../constants/types";
+import { Goal, GoalPost } from "../../constants/types";
 
 //COMMENT UNDER A GOAL
-export const db_AddGoalPost = async (goalUid: string, post: GoalPost) => {
-    const goalRef = doc(fs, "goals", goalUid);
-    await updateDoc(goalRef, {
-        posts: arrayUnion(post)
-    })
-}
-
-//LIKE A COMMENT
-export const db_UpdateGoalPosts = async (goalUid: string, posts: GoalPost[]) => {
-    const goalRef = doc(fs, "goals", goalUid);
-    await updateDoc(goalRef, {
-        posts,
-        updatedAt: Timestamp.now()
-    })
+export const db_AddGoalPost = async (goalUid: string, newPost: GoalPost) => {
+    try {
+        const goalRef = doc(fs, "goals", goalUid);
+        const batch = writeBatch(fs);
+        const newPostDoc = doc(fs, "goals", goalUid, "posts", newPost.uid);
+        batch.set(newPostDoc, newPost);
+        batch.update(goalRef, {
+            updatedAt: Timestamp.now(),
+        } as Goal)
+        await batch.commit();
+    } catch (e: any) {
+        console.log("Couldn't add goal post")
+    }
 }
