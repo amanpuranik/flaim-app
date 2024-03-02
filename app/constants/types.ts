@@ -27,8 +27,8 @@ export type Goal = {
     uid: string;
     name: string;
     tag?: string;
-    isPrivate: boolean;
-    isApprovalOpen: boolean;
+    onlyColabsCanView: boolean;
+    onlyColabsCanApprove: boolean;
     reward?: string;
     goalEndDate: Date;
     updatedAt: Timestamp;

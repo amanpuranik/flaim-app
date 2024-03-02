@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Button, Text, useTheme } from 'react-native-paper';
+import { Button, FAB, Text, useTheme } from 'react-native-paper';
 import { useEffect, useState } from 'react';
 import Wrapper from './components/Wrapper';
-import { TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { router, useSegments } from 'expo-router';
 import useGoalStore from './services/store/goalStore';
 import { Goal } from './constants/types';
@@ -39,7 +39,7 @@ export default function Feed() {
                 <Loading />
             }
             {!feedLoading &&
-                <View className="items-center h-full w-full">
+                <View className="items-center h-full w-full px-5">
                     <TouchableOpacity onPress={() => router.push("/goal")} className='mt-10 border-solid border-gray-300 rounded-3xl border-4 h-1/2 w-full bg-gray-300'>
                         <TouchableOpacity onPress={() => router.push("/goal-feed")} className='mt-2 ml-5'>
                             <Text style={{ color: clr.primary }} className="font-bold text-lg">
@@ -47,9 +47,16 @@ export default function Feed() {
                             </Text>
                         </TouchableOpacity>
                     </TouchableOpacity>
-                    <Button className='mt-10 w-5/6' mode='contained' onPress={() => router.push("/db-tester")}>DB Testert</Button>
                 </View>
+
             }
+            <FAB
+                icon="plus"
+                theme={{ roundness: 8 }}
+                className='absolute mb-12 mr-5 right-0 bottom-0 py-0'
+                onPress={() => router.push('/create-goal')}
+                size="medium"
+            />
         </Wrapper>
     );
 };

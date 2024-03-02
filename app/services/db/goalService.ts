@@ -5,8 +5,7 @@ import useUserStore from "../store/userStore";
 
 //CREATE A GOAL
 export const db_CreateGoal = async (goal: Goal) => {
-    const goalRef = doc(collection(fs, "goals"))
-    await setDoc(goalRef, goal);
+    await setDoc(doc(fs, "goals", goal.uid), goal);
 }
 
 //Update a goal

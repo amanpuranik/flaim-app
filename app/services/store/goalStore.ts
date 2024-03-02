@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { Goal } from '../../constants/types';
-import { db_GetGoalFeed } from '../db/goalService';
 
 interface GoalStore {
     goalFeed: Goal[],
