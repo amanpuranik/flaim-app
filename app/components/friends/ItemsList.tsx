@@ -1,34 +1,45 @@
 import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, Modal } from "react-native";
+import { useTheme, IconButton } from "react-native-paper";
 
 interface ItemsListProps {
   name: string;
   username: string;
   onRemove: () => void;
+  listType?: "friends" | "requests" | "mutuals";
 }
 
-const ItemsList: React.FC<ItemsListProps> = ({ name, username, onRemove }) => {
+const ItemsList: React.FC<ItemsListProps> = ({
+  name,
+  username,
+  onRemove,
+  listType,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
+  let clr = useTheme().colors;
 
   return (
     <>
-      <View className={`flex-row items-center p-3 bg-gray-900 rounded-lg m-2 `}>
+      <View className={`flex-row items-center rounded-lg ml-5 mr-3 mb-3`}>
         <View className={`flex-row items-center`}>
           <Image
             className={`w-12 h-12 rounded-full mr-4`}
             source={require("../../../assets/images/favicon.png")} // Replace with actual image URI
           />
           <View>
-            <Text className={`text-white font-bold`}>{name}</Text>
-            <Text className={`text-gray-400`}>{username}</Text>
+            <Text style={{ color: clr.primary }} className="font-bold">
+              {name}
+            </Text>
+            <Text style={{ color: clr.secondary }}>{username}</Text>
           </View>
         </View>
-        <TouchableOpacity
+        <IconButton
+          icon="close"
+          size={15}
           onPress={() => setModalVisible(true)}
-          className={`p-2 ml-auto`}
-        >
-          <Text className="text-white">x</Text>
-        </TouchableOpacity>
+          style={{ backgroundColor: "transparent" }}
+          className="ml-auto"
+        />
       </View>
 
       <Modal

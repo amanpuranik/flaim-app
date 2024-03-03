@@ -1,29 +1,35 @@
 import React, { useState, useRef } from "react";
-import {
-  ScrollView,
-  View,
-  Text,
-  Dimensions,
-  FlatList,
-  TextInput,
-} from "react-native";
+import { View, Dimensions, FlatList, TextInput } from "react-native";
 import BottomTabs from "./components/friends/BottomTabs";
 import Wrapper from "./components/Wrapper";
 import { router } from "expo-router";
 import ItemsList from "./components/friends/ItemsList";
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+} from "react-native-reanimated";
+import { useTheme } from "react-native-paper";
 
-const screenWidth = Dimensions.get("window").width - 45;
+const screenWidth = Dimensions.get("window").width;
 
 export default function Friends() {
+  let clr = useTheme().colors;
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("friends");
   const scrollRef = useRef<any>(null);
+  const scrollX = useSharedValue(0);
 
-  const handleTabPress = (tabName: string) => {
-    setActiveTab(tabName);
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollX.value = event.contentOffset.x;
+    },
+  });
+
+  const handleTabPress = (tabIndex: number) => {
+    const newPosition = screenWidth * tabIndex;
+
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
-        x: tabName === "friends" ? 0 : screenWidth,
+        x: newPosition,
         animated: true,
       });
     }
@@ -36,6 +42,16 @@ export default function Friends() {
   };
 
   const friendsList = [
+    { name: "Test", username: "tarela_o" },
+    { name: "gang", username: "ghani" },
+    { name: "test", username: "yo" },
+    { name: "gang", username: "ghani" },
+    { name: "test", username: "yo" },
+    { name: "gang", username: "ghani" },
+    { name: "test", username: "yo" },
+    { name: "gang", username: "ghani" },
+    { name: "test", username: "yo" },
+    { name: "gang", username: "ghani" },
     { name: "test", username: "yo" },
     { name: "gang", username: "ghani" },
     { name: "test", username: "yo" },
@@ -61,16 +77,31 @@ export default function Friends() {
     { name: "suban", username: "ahmed" },
   ];
 
-  const renderFriendItem = ({ item }: any) => (
-    <ItemsList
-      name={item.name}
-      username={item.username}
-      onRemove={() => {
-        console.log("Remove friend:", item.name);
-        // Implement friend removal logic
-      }}
-    />
-  );
+  const mutualsList = [
+    { name: "sarosh", username: "heyy" },
+    { name: "suban", username: "ahmed" },
+    { name: "sarosh", username: "heyy" },
+    { name: "suban", username: "ahmed" },
+    { name: "sarosh", username: "heyy" },
+    { name: "suban", username: "ahmed" },
+    { name: "sarosh", username: "heyy" },
+    { name: "suban", username: "ahmed" },
+    { name: "sarosh", username: "heyy" },
+    { name: "suban", username: "ahmed" },
+  ];
+
+  const renderFriendItem = ({ item }: any) => {
+    return (
+      <ItemsList
+        name={item.name}
+        username={item.username}
+        onRemove={() => {
+          console.log("Remove friend:", item.name);
+          // Implement friend removal logic
+        }}
+      />
+    );
+  };
 
   const renderRequestItem = ({ item }: any) => (
     <ItemsList
@@ -89,32 +120,34 @@ export default function Friends() {
       rightIcon="arrow-right"
       rightIconAction={() => router.push("/feed")}
     >
-      <View className="px-2 pb-3">
-        <View className="flex flex-row items-center rounded-lg bg-black p-2">
+      <View className="px-4 pb-3">
+        <View
+          style={{ backgroundColor: clr.secondaryContainer }}
+          className="flex flex-row items-center rounded-lg p-2"
+        >
           <TextInput
-            className="flex-1 ml-2 text-white"
+            className="flex-1 ml-2"
+            style={{ color: clr.primary }}
             onChangeText={handleSearchChange}
-            placeholder="🔍 Add or search friends"
+            placeholder="🔍  Add or search friends"
             value={searchQuery}
+            placeholderTextColor={"white"}
           />
         </View>
       </View>
-      <ScrollView
-        horizontal={true}
-        pagingEnabled={true}
-        showsHorizontalScrollIndicator={false}
+      <Animated.ScrollView
+        horizontal
+        pagingEnabled
+        onScroll={onScroll}
+        scrollEventThrottle={16}
         ref={scrollRef}
-        onMomentumScrollEnd={(e) => {
-          const offsetX = e.nativeEvent.contentOffset.x;
-          setActiveTab(offsetX / screenWidth === 0 ? "friends" : "requests");
-        }}
-        className="flex-1"
       >
-        <View style={{ width: screenWidth }}>
+        <View style={{ width: screenWidth }} className="">
           <FlatList
             data={friendsList}
             renderItem={renderFriendItem}
             keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{ paddingBottom: 60 }}
           />
         </View>
         <View style={{ width: screenWidth }}>
@@ -122,79 +155,21 @@ export default function Friends() {
             data={requestsList}
             renderItem={renderRequestItem}
             keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{ paddingBottom: 60 }}
           />
         </View>
-      </ScrollView>
-      <BottomTabs onTabPress={handleTabPress} activeTab={activeTab} />
+        <View style={{ width: screenWidth }}>
+          <FlatList
+            data={mutualsList}
+            renderItem={renderRequestItem}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{ paddingBottom: 60 }}
+          />
+        </View>
+      </Animated.ScrollView>
+      <View className="bg-white">
+        <BottomTabs onTabPress={handleTabPress} scrollX={scrollX} />
+      </View>
     </Wrapper>
   );
 }
-
-// If we run into performance problems - to render only one tab at a time:
-
-// import React, { useState, useRef } from 'react';
-// import { ScrollView, View, FlatList, Dimensions } from 'react-native';
-// import BottomTabs from './components/friendsComponents/BottomTabs';
-// import Wrapper from './components/Wrapper';
-// import { router } from 'expo-router';
-// import ItemsList from './components/friendsComponents/ItemsList';
-
-// const screenWidth = Dimensions.get('window').width - 40;
-
-// export default function Friends() {
-//   const [activeTab, setActiveTab] = useState('friends');
-//   const scrollRef = useRef(null);
-
-//   const handleTabPress = (tabName) => {
-//     setActiveTab(tabName);
-//     if (scrollRef.current) {
-//       scrollRef.current.scrollTo({
-//         x: tabName === 'friends' ? 0 : screenWidth,
-//         animated: true,
-//       });
-//     }
-//   };
-
-//   // Data for friends and requests
-//   const friendsList = [/* ... */];
-//   const requestsList = [/* ... */];
-
-//   const renderItem = ({ item }) => (
-//     <ItemsList
-//       name={item.name}
-//       username={item.username}
-//       onRemove={() => {
-//         console.log('Remove item:', item.name);
-//       }}
-//     />
-//   );
-
-//   return (
-//     <Wrapper
-//       title='FLAIM'
-//       rightIcon='arrow-right'
-//       rightIconAction={() => router.push('/feed')}
-//     >
-//       <ScrollView
-//         horizontal={true}
-//         pagingEnabled={true}
-//         showsHorizontalScrollIndicator={false}
-//         ref={scrollRef}
-//         onMomentumScrollEnd={(e) => {
-//           const offsetX = e.nativeEvent.contentOffset.x;
-//           setActiveTab(offsetX / screenWidth === 0 ? 'friends' : 'requests');
-//         }}
-//         className='flex-1'
-//       >
-//         <FlatList
-//           data={activeTab === 'friends' ? friendsList : requestsList}
-//           renderItem={renderItem}
-//           keyExtractor={(item, index) => index.toString()}
-//           horizontal={false}
-//           style={{ width: screenWidth }}
-//         />
-//       </ScrollView>
-//       <BottomTabs onTabPress={handleTabPress} activeTab={activeTab} />
-//     </Wrapper>
-//   );
-// }

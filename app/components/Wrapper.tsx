@@ -7,70 +7,68 @@ import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../firebase";
 import { signOut } from "../services/auth";
-import { CommonActions } from "@react-navigation/native"
+import { CommonActions } from "@react-navigation/native";
 import React from "react";
 
-
 type HeaderProps = {
-    title?: String;
-    leftIcon?: IconSource;
-    rightIcon?: IconSource;
-    leftIconAction?: () => void;
-    rightIconAction?: () => void;
-    children: any;
+  title?: String;
+  leftIcon?: IconSource;
+  rightIcon?: IconSource;
+  leftIconAction?: () => void;
+  rightIconAction?: () => void;
+  children: any;
 };
 
 export default function Wrapper(props: HeaderProps) {
-    const navigation = useNavigation();
-    useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                navigation.dispatch(CommonActions.reset({
-                    routes: [{ key: "login", name: "login" }]
-                }))
-            }
-        });
-    }, []);
+  const navigation = useNavigation();
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigation.dispatch(
+          CommonActions.reset({
+            routes: [{ key: "login", name: "login" }],
+          })
+        );
+      }
+    });
+  }, []);
 
-    let clr = useTheme().colors;
+  let clr = useTheme().colors;
 
-    const iconWidth = "w-1/5";
-    return (
-        <SafeAreaView
-            style={{ backgroundColor: clr.background }}
-            className={`flex-1 pt-4`}
-        >
-            <View className="px-5 flex-row items-center justify-between">
-                {props.leftIcon && (
-                    <TouchableOpacity onPress={props.leftIconAction} className={iconWidth}>
-                        <IconButton
-                            icon={props.leftIcon!}
-                            iconColor={clr.primary}
-                            size={32}
-                        />
-                    </TouchableOpacity>
-                )}
+  const iconWidth = "w-1/5";
+  return (
+    <SafeAreaView
+      className="flex-1"
+      style={{ backgroundColor: clr.background }}
+    >
+      <View className="flex-row items-center">
+        {props.leftIcon ? (
+          <TouchableOpacity onPress={props.leftIconAction}>
+            <IconButton
+              icon={props.leftIcon}
+              iconColor={clr.primary}
+              size={32}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View className="w-[60px]" />
+        )}
 
-                {!props.leftIcon && <View className={iconWidth}></View>}
+        <Text className="flex-1 text-center text-[25px]">{props.title}</Text>
 
-                {props.title && <Text className="flex-wrap w-44 text-center" variant={"headlineSmall"}>{props.title}</Text>}
-
-                {props.rightIcon && (
-                    <TouchableOpacity
-                        onPress={props.rightIconAction}
-                        className={iconWidth}
-                    >
-                        <IconButton
-                            icon={props.rightIcon!}
-                            iconColor={clr.primary}
-                            size={32}
-                        />
-                    </TouchableOpacity>
-                )}
-
-                {!props.rightIcon && <View className={iconWidth}></View>}
-            </View>
-            {props.children}
-        </SafeAreaView>
-    );
+        {props.rightIcon ? (
+          <TouchableOpacity onPress={props.rightIconAction}>
+            <IconButton
+              icon={props.rightIcon}
+              iconColor={clr.primary}
+              size={32}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View className="w-[60px]" />
+        )}
+      </View>
+      {props.children}
+    </SafeAreaView>
+  );
 }
