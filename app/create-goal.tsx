@@ -238,7 +238,7 @@ export default function CreateGoal() {
                                                         className={`m-1 h-10 w-10 rounded-full mr-4`}
                                                         source={require("../assets/images/profilepic.jpeg")} // Replace with actual image URI
                                                     />
-                                                    <Text>{friend.username}</Text>
+                                                    <Text style={{ color: clr.onSecondary }}>{friend.username}</Text>
                                                 </View>
                                             </View>
                                         </TouchableRipple>
@@ -313,15 +313,6 @@ export default function CreateGoal() {
 
                     </View>
                     <Spacer space={5} />
-                    {/* <Button
-                        loading={creatingGoal}
-                        contentStyle={{ height: 50 }}
-                        mode="contained"
-                        onPress={() => createGoal()}
-                        className='mb-10 w-10/12 self-center'
-                    >
-                        {createBtnText}
-                    </Button> */}
                 </View>
             </View>
 
