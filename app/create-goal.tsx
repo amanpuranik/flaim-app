@@ -20,6 +20,9 @@ import { FlatList } from 'react-native-gesture-handler'
 export default function CreateGoal() {
     let clr = useTheme().colors;
     const navigation = useNavigation();
+    const todayDate = new Date();
+    const tomorrowDate = new Date(todayDate);
+    tomorrowDate.setDate(todayDate.getDate() + 1);
 
 
     const [friendsLoading, setFriendsLoading] = useState(true);
@@ -218,7 +221,7 @@ export default function CreateGoal() {
                     {collaboratorInputIsFocused && collaboratorInputMatches.length > 0 &&
                         <ScrollView
                             keyboardShouldPersistTaps={"always"}
-                            style={{ backgroundColor: clr.secondary }}
+                            style={{ backgroundColor: clr.surfaceVariant }}
                             className='self-center absolute z-20 top-[146] h-auto max-h-32 w-11/12 rounded-md'>
                             {friendsLoading && <ActivityIndicator color={clr.secondaryContainer} className='py-2' />}
                             {!friendsLoading &&
@@ -238,7 +241,7 @@ export default function CreateGoal() {
                                                         className={`m-1 h-10 w-10 rounded-full mr-4`}
                                                         source={require("../assets/images/profilepic.jpeg")} // Replace with actual image URI
                                                     />
-                                                    <Text style={{ color: clr.onSecondary }}>{friend.username}</Text>
+                                                    <Text style={{ color: clr.onSurfaceVariant }}>{friend.username}</Text>
                                                 </View>
                                             </View>
                                         </TouchableRipple>
@@ -312,6 +315,11 @@ export default function CreateGoal() {
                         }
 
                     </View>
+                    {goalEndDateInputHasError &&
+                        <View className='w-full px-5 mt-2 items-center'>
+                            <Text style={{ color: clr.error }}>Select a completion date for your goal</Text>
+                        </View>
+                    }
                     <Spacer space={5} />
                 </View>
             </View>
@@ -335,8 +343,11 @@ export default function CreateGoal() {
                     setShowDatePicker(false);
                 }}
                 onConfirm={(date: any) => {
+                    const dateOutput: Date = date.date;
                     setShowDatePicker(false);
-                    setGoalEndDateInput(date.date);
+                    if (dateOutput.toDateString() !== todayDate.toDateString()) {
+                        setGoalEndDateInput(date.date);
+                    }
                 }}
 
             />
