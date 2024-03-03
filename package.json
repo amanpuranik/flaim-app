@@ -27,6 +27,7 @@
     "react-native": "0.72.10",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-get-random-values": "~1.9.0",
+    "react-native-neat-date-picker": "^1.4.12",
     "react-native-onboarding-swiper": "^1.1.9",
     "react-native-paper": "^5.10.6",
     "react-native-reanimated": "~3.3.0",

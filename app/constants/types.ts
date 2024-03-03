@@ -30,7 +30,7 @@ export type Goal = {
     onlyColabsCanView: boolean;
     onlyColabsCanApprove: boolean;
     reward?: string;
-    goalEndDate: Date;
+    goalEndDate: Timestamp;
     updatedAt: Timestamp;
     createdAt: Timestamp;
 
