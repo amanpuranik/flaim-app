@@ -3,10 +3,13 @@ import { TouchableOpacity, View, Text, Image, ScrollView, StyleSheet } from 'rea
 import { TextInput, useTheme, Button, IconButton } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useState } from 'react';
+import { MD3Colors } from 'react-native-paper/lib/typescript/types';
 
 export default function Comment(props: any) {
 
     let clr = useTheme().colors;
+
+    const styles = getStyles(clr)
 
     const [isLiked, setLikedStatus] = useState(props.data.liked);
 
@@ -31,7 +34,7 @@ export default function Comment(props: any) {
             />
             <View style={{ flex: 1 }}>
                 {/* Name */}
-                <Text style={{ fontWeight: 'bold', color: "white" }}>{props.data.name}</Text>
+                <Text style={{ fontWeight: 'bold', color: clr.onBackground }}>{props.data.name}</Text>
                 {/* Comment */}
                 <View style={styles.container}>
                     <Text style={styles.commentText}>{props.data.comment}</Text>
@@ -39,9 +42,9 @@ export default function Comment(props: any) {
                     <IconButton
                         icon={isLiked ? "cards-heart" : "cards-heart-outline"}
                         size={20}
-                        style={styles.iconButton} 
+                        style={styles.iconButton}
                         onPress={likeComment}
-                        iconColor={isLiked ? "red" : null}
+                        iconColor={isLiked ? "red" : undefined}
                     />
 
                 </View>
@@ -53,22 +56,23 @@ export default function Comment(props: any) {
 
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    commentText: {
-        color: 'white',
-    },
-    iconButton: {
-        alignSelf: 'flex-start',
-        height: 17,
-        fill: "red"
-    },
-});
+const getStyles = (clr: MD3Colors) => {
 
-
+    return StyleSheet.create({
+        container: {
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+        },
+        commentText: {
+            color: clr.onBackground,
+        },
+        iconButton: {
+            alignSelf: 'flex-start',
+            height: 17,
+            fill: "red"
+        },
+    })
+}
 
