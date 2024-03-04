@@ -14,7 +14,6 @@ export default function profile() {
   const handleCopyText = async () => {
     const textToCopy = "Link to profile";
     await Clipboard.setString(textToCopy);
-    console.log("text copied");
     toast.success("Profile link copied", {
       width: 300,
       position: ToastPosition.BOTTOM,

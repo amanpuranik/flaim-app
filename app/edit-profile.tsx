@@ -5,6 +5,8 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { router } from "expo-router";
 import { Avatar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import { toast, ToastPosition, Toasts } from '@backpackapp-io/react-native-toast';
+
 
 
 import { useActionSheet } from '@expo/react-native-action-sheet';
@@ -52,8 +54,18 @@ export default function editProfile() {
         navigation.navigate('camera')
     }
 
+    const saveChanges = () => {
+        console.log("saving changes")
+        toast.success("Changes have been saved", {
+            width: 300,
+            position: ToastPosition.BOTTOM
+        });
+    }
+
+
     return (
         <Wrapper title="Edit profile" leftIcon='arrow-left' leftIconAction={router.back}>
+            <Toasts />
             <View className="items-center h-full w-full flex flex-col">
                 {/* <Avatar.Icon icon="camera" size={96} label="AP" /> */}
                 <View style={{ position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
@@ -80,6 +92,7 @@ export default function editProfile() {
 
 
                 <FlatTextInput
+                
                     placeholder={userName}
                 />
                 <FlatTextInput
@@ -88,6 +101,9 @@ export default function editProfile() {
                 <FlatTextInput
                     placeholder={name}
                 />
+
+                <Button className='mt-10 w-50' mode='contained' onPress={saveChanges} >Save changes</Button>
+
 
             </View>
         </Wrapper >
