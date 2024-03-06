@@ -5,8 +5,6 @@ import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Wrapper from './components/Wrapper';
 import { router } from "expo-router";
 import { IconButton } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-
 
 
 
@@ -15,9 +13,6 @@ export default function camera() {
     const [type, setType] = useState(CameraType.back);
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const cameraRef = useRef<Camera>(null);
-
-    const navigation = useNavigation()
-
 
     if (!permission) {
         // Camera permissions are still loading
@@ -64,8 +59,7 @@ export default function camera() {
                         icon="arrow-left"
                         size={32}
                         onPress={() => {
-                            console.log('going back')
-                            navigation.goBack()
+                            router.back();
                         }}
                     />
 
