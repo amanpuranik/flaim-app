@@ -7,6 +7,8 @@ import { PaperProvider, } from 'react-native-paper';
 import { lightTheme, darkTheme } from './constants/theme';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import React from 'react';
+import { decode } from 'base-64';
+
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,6 +51,9 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  if (typeof atob === 'undefined') {
+    global.atob = decode;
+  }
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
 

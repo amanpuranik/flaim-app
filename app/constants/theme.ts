@@ -1,4 +1,3 @@
-import { colors } from './colors';
 import { MD3DarkTheme, MD3LightTheme, configureFonts } from 'react-native-paper';
 
 const fontConfig = {
@@ -8,25 +7,27 @@ const fontConfig = {
     //     lineHeight: 70,
     //     fontSize: 45
     // },
-}
+};
+
 const genericOptions = {
     roundness: 2,
     fonts: configureFonts({ config: fontConfig }),
-
-}
+};
 
 export const lightTheme = {
     ...MD3LightTheme,
     ...genericOptions,
-    colors: colors.light,
-}
+    colors: {
+        ...MD3LightTheme.colors,
+        approve: '#61C091',
+    },
+};
 
 export const darkTheme = {
     ...MD3DarkTheme,
     ...genericOptions,
-    colors: colors.dark,
-}
-
-
-
-
+    colors: {
+        ...MD3DarkTheme.colors,
+        approve: '#408162',
+    },
+};

@@ -3,7 +3,7 @@ import Wrapper from './components/Wrapper'
 import { router, useNavigation } from 'expo-router'
 import { View, ScrollView, Keyboard, Image, TouchableOpacity, ListRenderItem } from 'react-native'
 import { ActivityIndicator, Button, Chip, Dialog, Divider, Portal, SegmentedButtons, Switch, Text, TextInput, TouchableRipple, useTheme } from 'react-native-paper'
-import { FlaimUser, Goal } from './constants/types'
+import { FlaimUser, Goal, Role } from './constants/types'
 import { generateUid } from './services/util'
 import { Timestamp } from 'firebase/firestore'
 import { db_CreateGoal } from './services/db/goalService'
@@ -14,12 +14,16 @@ import FlatTextInput from './components/FlatTextInput'
 import DatePicker from 'react-native-neat-date-picker'
 import { CommonActions } from "@react-navigation/native";
 import { FlatList } from 'react-native-gesture-handler'
+import useGoalStore from './services/store/goalStore'
 
 
 
 export default function CreateGoal() {
     let clr = useTheme().colors;
     const navigation = useNavigation();
+
+    const { setGoalBeingCreated } = useGoalStore();
+
     const todayDate = new Date();
     const tomorrowDate = new Date(todayDate);
     tomorrowDate.setDate(todayDate.getDate() + 1);
@@ -37,7 +41,7 @@ export default function CreateGoal() {
     const [collaboratorInputMatches, setCollaboratorInputMatches] = useState<FlaimUser[]>([]);
 
 
-    const [collaboratorRoleInput, setCollaboratorRoleInput] = useState<'partner' | 'student' | 'teacher'>("partner");
+    const [collaboratorRoleInput, setCollaboratorRoleInput] = useState<Role>("partner");
     const [collaboratorUid, setCollaboratorUid] = useState<string | null>(null);
 
     const [onlyColabCanView, setOnlyColabCanView] = useState(false);
@@ -98,17 +102,24 @@ export default function CreateGoal() {
     }, [])
 
     const createGoal = () => {
-        console.log("CREATE GOAL BUTTON PRESSED")
         Keyboard.dismiss();
-
-
-
         if (goalNameInput.length < 1 || collaboratorUid === null || goalEndDateInput === null) {
             setGoalInputHasError(goalNameInput.length < 1);
             setCollaboratorInputHasError(collaboratorUid === null)
             setGoalEndDateInputHasError(goalEndDateInput === null);
         } else {
             setCreatingGoal(true);
+            let currentUserRole: Role = "partner";
+            switch (collaboratorRoleInput) {
+                case 'student':
+                    currentUserRole = "teacher";
+                    break;
+                case 'teacher':
+                    currentUserRole = "student"
+                    break;
+                default:
+                    currentUserRole = "partner"
+            }
             const goalDraft: Goal = {
                 uid: generateUid(),
                 name: goalNameInput,
@@ -118,19 +129,25 @@ export default function CreateGoal() {
                 goalEndDate: Timestamp.fromDate(goalEndDateInput!),
                 updatedAt: Timestamp.now(),
                 createdAt: Timestamp.now(),
-                collaboratorUids: [collaboratorUid!],
-                collaborators: [{
-                    role: collaboratorRoleInput,
-                    uid: generateUid(),
-                    userUid: currentUser?.uid!
-                }]
+                collaboratorUids: [collaboratorUid!, currentUser?.uid!],
+                collaborators: [
+                    {
+                        role: collaboratorRoleInput,
+                        uid: generateUid(),
+                        userUid: collaboratorUid
+                    },
+                    {
+                        role: currentUserRole,
+                        uid: generateUid(),
+                        userUid: currentUser?.uid!
+                    }
+                ]
             }
             db_CreateGoal(goalDraft)
                 .then(() => {
                     setCreatingGoal(false);
-                    navigation.dispatch(CommonActions.reset({
-                        routes: [{ key: "feed", name: "feed" }]
-                    }))
+                    setGoalBeingCreated(goalDraft);
+                    router.replace("/feed")
                 })
                 .catch((e: any) => {
                     setCreatingGoal(false);
@@ -139,30 +156,6 @@ export default function CreateGoal() {
         }
     }
 
-    // const renderFriendsSearchList = (friend: any) => {
-    //     return <View className='w-full h-full'>
-    //         <TouchableRipple
-    //             onPress={() => {
-    //                 setCollaboratorUid(friend.uid)
-    //                 setCollaboratorInput(friend.username)
-    //             }}
-    //             key={generateUid()}
-    //         >
-    //             <View>
-    //                 {/* {index != 0 && <Divider />} */}
-    //                 <View className={`flex-row items-center`}>
-    //                     <Image
-    //                         className={`m-1 h-10 w-10 rounded-full mr-4`}
-    //                         source={require("../assets/images/profilepic.jpeg")} // Replace with actual image URI
-    //                     />
-    //                     <Text style={{ color: clr.onSecondary }}>{friend.username}</Text>
-    //                 </View>
-    //             </View>
-    //         </TouchableRipple>
-
-    //     </View>
-
-    // }
 
     return (
         <Wrapper
@@ -171,6 +164,7 @@ export default function CreateGoal() {
             leftIconAction={() => router.back()}
             rightIcon={"plus-circle"}
             rightIconAction={() => createGoal()}
+            loading={creatingGoal}
         >
             <View className='w-full h-full flex-1'>
                 <View className='pt-5'>
@@ -255,7 +249,7 @@ export default function CreateGoal() {
                     <SegmentedButtons
                         theme={{ roundness: 0 }}
                         value={collaboratorRoleInput}
-                        onValueChange={(value) => setCollaboratorRoleInput(value as 'partner' | 'student' | 'teacher')}
+                        onValueChange={(value) => setCollaboratorRoleInput(value as Role)}
                         density='small'
                         buttons={[
                             {
@@ -320,10 +314,8 @@ export default function CreateGoal() {
                             <Text style={{ color: clr.error }}>Select a completion date for your goal</Text>
                         </View>
                     }
-                    <Spacer space={5} />
                 </View>
             </View>
-
             <DatePicker
                 colorOptions={{
                     backgroundColor: clr.background,
@@ -338,7 +330,7 @@ export default function CreateGoal() {
                 }}
                 isVisible={showDatePicker}
                 mode={'single'}
-                minDate={new Date()}
+                minDate={todayDate}
                 onCancel={() => {
                     setShowDatePicker(false);
                 }}

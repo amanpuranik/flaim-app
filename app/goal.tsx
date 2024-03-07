@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, View, Text, Image, ScrollView, StyleSheet } from 'react-native';
-import { TextInput, useTheme, Button, IconButton } from 'react-native-paper';
+import { TextInput, useTheme, Button, IconButton, ActivityIndicator } from 'react-native-paper';
 import Wrapper from './components/Wrapper';
 import { router } from 'expo-router';
 import Comment from "./components/goals/comment";
 import FlatTextInput from './components/FlatTextInput';
+import GoalPane from './components/GoalPane';
+import { Goal } from './constants/types';
+import { db_GetGoal } from './services/db/goalService';
+import { useLocalSearchParams } from 'expo-router';
 
 
-export default function Goal() {
+export default function GoalPage() {
   let clr = useTheme().colors;
+
+  //Set in GoalPane when routing
+  const params = useLocalSearchParams();
+  const goalName = params.goalName.toString();
+  const goalUid = params.goalUid.toString();
+
+  const [goal, setGoal] = useState<Goal>();
+  const [goalLoading, setGoalLoading] = useState(true);
 
   const dummyComments = [
     {
@@ -49,6 +61,17 @@ export default function Goal() {
     }
   ];
 
+  useEffect(() => {
+    db_GetGoal(goalUid)
+      .then((goal) => {
+        setGoal(goal);
+        setGoalLoading(false);
+      })
+      .catch((e: any) => {
+        console.log("Couldn't get goal");
+        setGoalLoading(false);
+      })
+  }, [])
 
   const submitComment = () => {
     console.log("submit comment")
@@ -71,7 +94,13 @@ export default function Goal() {
   }
 
   return (
-    <Wrapper title="<GOAL_NAME>" leftIcon='arrow-left' leftIconAction={router.back}>
+    <Wrapper
+      title={goalName}
+      leftIcon='arrow-left'
+      leftIconAction={router.back}
+      rightIcon={"format-list-group"}
+      rightIconAction={() => router.push("/goal-feed")}
+    >
       <ScrollView
         className="flex-1"
         style={{ flex: 1, }}
@@ -80,30 +109,30 @@ export default function Goal() {
 
       >
         <View className="items-centerx w-full" style={{ alignItems: 'flex-start', display: 'flex', flexDirection: "column", flex: 1 }}>
-          <TouchableOpacity style={{ height: 400 }} onPress={() => router.push("/goal")} className='mt-10 border-solid border-gray-300 rounded-3xl border-4  w-full bg-gray-300'>
-            <TouchableOpacity onPress={() => router.push("/goal-feed")} className='mt-2 ml-5'>
-              <Text style={{ color: clr.primary }} className="font-bold text-lg">
-                {"<GOAL_NAME>"}
-              </Text>
-            </TouchableOpacity>
-          </TouchableOpacity>
+          <View className='w-full px-2'>
+            {goalLoading &&
+              <View className='h-96 items-center justify-center'>
+                <ActivityIndicator />
+              </View>
+            }
+            {!goalLoading && goal && <GoalPane goal={goal} inFeed={false} />}
+          </View>
           <View style={{ marginTop: 20, alignItems: 'flex-start', display: 'flex', flexDirection: "column", flex: 1 }}>
 
             {dummyComments.map((comment, index) => (
 
               <Comment data={comment} index={index} key={index} />
             ))}
-
           </View>
         </View>
 
       </ScrollView>
-        <FlatTextInput marginTop={0}  placeholder='Leave a comment' right={
-          <TextInput.Icon
-            icon="send"
-            onPress={submitComment}
-          />
-        } />
+      <FlatTextInput placeholder='Leave a comment' right={
+        <TextInput.Icon
+          icon="send"
+          onPress={submitComment}
+        />
+      } />
 
     </Wrapper >
   );
@@ -125,6 +154,6 @@ const styles = StyleSheet.create({
     fill: "red"
   },
   commentInput: {
-    marginTop:0
+    marginTop: 0
   },
 });

@@ -41,14 +41,8 @@ export const db_GetGoal = async (goalUid: string): Promise<Goal | undefined> => 
         const postsSnapshot = await getDocs(postsRef);
         const posts = postsSnapshot.docs.map(postDoc => postDoc.data() as GoalPost);
 
-        // Fetch collaborators subcollection
-        const collaboratorsRef = collection(goalRef, 'collaborators');
-        const collaboratorsSnapshot = await getDocs(collaboratorsRef);
-        const collaborators = collaboratorsSnapshot.docs.map(collaboratorDoc => collaboratorDoc.data() as GoalCollaborator);
-
         goalData.approvals = approvals;
         goalData.posts = posts;
-        goalData.collaborators = collaborators;
         goalData.comments = comments;
 
         return goalData;
@@ -80,14 +74,8 @@ export const db_GetGoalFeed = async (currentUser: FlaimUser | undefined): Promis
             const postsSnapshot = await getDocs(postsRef);
             const posts = postsSnapshot.docs.map(postDoc => postDoc.data() as GoalPost);
 
-            // Fetch collaborators subcollection
-            const collaboratorsRef = collection(doc.ref, 'collaborators');
-            const collaboratorsSnapshot = await getDocs(collaboratorsRef);
-            const collaborators = collaboratorsSnapshot.docs.map(collaboratorDoc => collaboratorDoc.data() as GoalCollaborator);
-
             goalData.approvals = approvals;
             goalData.posts = posts;
-            goalData.collaborators = collaborators;
 
             return goalData;
         }));

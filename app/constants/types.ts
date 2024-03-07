@@ -47,8 +47,10 @@ export type Goal = {
 export type GoalCollaborator = {
     uid: string;
     userUid: string;
-    role: 'partner' | 'student' | 'teacher'
+    role: Role
 }
+
+export type Role = 'partner' | 'student' | 'teacher'
 
 export type GoalComment = {
     uid: string;
@@ -67,7 +69,6 @@ export type GoalApproval = {
     uid: string;
     postUid: string;
     userUid: string;
-    updatedAt: Timestamp;
     createdAt: Timestamp;
 }
 

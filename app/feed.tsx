@@ -3,30 +3,48 @@ import { Button, FAB, Text, useTheme } from 'react-native-paper';
 import { useEffect, useState } from 'react';
 import Wrapper from './components/Wrapper';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
-import { router, useSegments } from 'expo-router';
+import { router, useLocalSearchParams, useSegments } from 'expo-router';
 import useGoalStore from './services/store/goalStore';
 import { Goal } from './constants/types';
 import Loading from './components/Loading';
 import { db_GetGoalFeed } from './services/db/goalService';
 import useUserStore from './services/store/userStore';
+import { FlatList, RefreshControl } from 'react-native-gesture-handler';
+import GoalPane from './components/GoalPane';
+import Spacer from './components/Spacer';
 
 
 export default function Feed() {
     let clr = useTheme().colors;
 
     const { currentUser } = useUserStore();
-    const { goalFeed, setGoalFeed } = useGoalStore();
+    const { goalFeed, setGoalFeed, goalBeingCreated, setGoalBeingCreated } = useGoalStore();
 
-    const [feedLoading, setFeedLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false)
+
 
     useEffect(() => {
-        const getFeed = async () => {
-            const goals: Goal[] = await db_GetGoalFeed(currentUser);
-            setGoalFeed(goals);
-            setFeedLoading(false);
-        }
         getFeed();
     }, []);
+
+    useEffect(() => {
+        if (goalBeingCreated) {
+            goalFeed.unshift(goalBeingCreated);
+            setGoalFeed(goalFeed)
+        }
+        setGoalBeingCreated(null);
+    }, [goalBeingCreated])
+
+    const getFeed = async () => {
+        setRefreshing(true)
+        const goals: Goal[] = await db_GetGoalFeed(currentUser);
+        setGoalFeed(goals);
+        setRefreshing(false);
+    }
+
+    const addPostToGoal = async (goalUid: string, imageUri: string) => {
+
+    }
 
     return (
         <Wrapper
@@ -35,27 +53,33 @@ export default function Feed() {
             rightIcon='account'
             leftIconAction={() => router.push("/friends")}
             rightIconAction={() => router.push("/profile")}>
-            {feedLoading &&
-                <Loading />
-            }
-            {!feedLoading &&
-                <View className="items-center h-full w-full px-5">
-                    <TouchableOpacity onPress={() => router.push("/goal")} className='mt-10 border-solid border-gray-300 rounded-3xl border-4 h-1/2 w-full bg-gray-300'>
-                        <TouchableOpacity onPress={() => router.push("/goal-feed")} className='mt-2 ml-5'>
-                            <Text style={{ color: clr.primary }} className="font-bold text-lg">
-                                {"<GOAL_NAME>"}
-                            </Text>
-                        </TouchableOpacity>
-                    </TouchableOpacity>
-                </View>
+            <View className='flex-1'>
+                <FlatList className="h-full w-full px-2 mt-2"
+                    extraData={goalBeingCreated}
+                    data={goalFeed}
+                    renderItem={(goal) => <GoalPane inFeed={true} goal={goal.item} />}
+                    ItemSeparatorComponent={() => <Spacer space={3} />}
+                    ListFooterComponent={() => <Spacer space={10} />}
+                    keyExtractor={(item) => item.uid}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={() => {
+                                getFeed();
+                            }}
+                        />
+                    }
+                />
+            </View>
 
-            }
             <FAB
                 icon="plus"
-                theme={{ roundness: 8 }}
+                label='New Goal'
+                color={clr.onSecondary}
+                style={{ backgroundColor: clr.secondary, borderRadius: 80 }}
                 className='absolute mb-12 mr-5 right-0 bottom-0 py-0'
                 onPress={() => router.push('/create-goal')}
-                size="medium"
+                size="small"
             />
         </Wrapper>
     );
