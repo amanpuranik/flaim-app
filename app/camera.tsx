@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Wrapper from './components/Wrapper';
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { IconButton } from 'react-native-paper';
 
 
@@ -13,6 +13,10 @@ export default function camera() {
     const [type, setType] = useState(CameraType.back);
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const cameraRef = useRef<Camera>(null);
+
+    const params = useLocalSearchParams();
+    const goalName = params.goalName.toString();
+    const goalUid = params.goalUid.toString();
 
     if (!permission) {
         // Camera permissions are still loading
@@ -36,9 +40,15 @@ export default function camera() {
     const takePictureAsync = async () => {
         if (cameraRef.current) {
             try {
-                const photo = await cameraRef.current.takePictureAsync();
-                if (photo?.uri) {
-                    console.log('Picture taken:', photo.uri);
+                const options = { quality: 0.5 };
+                const photo = await cameraRef.current.takePictureAsync(options);
+                if (photo && photo.uri) {
+                    if (goalUid) {
+                        router.push({
+                            pathname: "/post-viewer",
+                            params: { uri: photo.uri, photoWidth: photo.width.toString(), goalUid: goalUid, goalName: goalName }
+                        })
+                    }
                 } else {
                     console.warn('Failed to capture picture');
                 }

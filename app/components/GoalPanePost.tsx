@@ -29,7 +29,8 @@ export default function GoalPanePost(props: GoalPostProps) {
                     approval.postUid === post.uid && approval.userUid === currentUser?.uid
             );
 
-            const isUserPost = currentUser.uid !== post.userUid;
+            const isUserPost = currentUser.uid === post.userUid;
+
             const userIsCollab = goal.collaboratorUids.includes(currentUser.uid);
             const onlyCollabsCanApprove = goal.onlyColabsCanApprove;
 
@@ -70,7 +71,8 @@ export default function GoalPanePost(props: GoalPostProps) {
                     borderTopRightRadius: props.inFeed ? 0 : defaultBorderRadius
                 }}
                 className='w-full h-full'
-                source={require("../../assets/images/dude-running.jpeg")}
+                source={{ uri: post.imageUrl }}
+            // source={require("../../assets/images/dude-running.jpeg")}
             />
             {postCanBeApproved &&
                 <FAB

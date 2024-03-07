@@ -17,9 +17,6 @@ import Spacer from './components/Spacer';
 export default function Feed() {
     let clr = useTheme().colors;
 
-    const params = useLocalSearchParams();
-    const newGoal = params.newGoal;
-
     const { currentUser } = useUserStore();
     const { goalFeed, setGoalFeed, goalBeingCreated, setGoalBeingCreated } = useGoalStore();
 
@@ -45,6 +42,10 @@ export default function Feed() {
         setRefreshing(false);
     }
 
+    const addPostToGoal = async (goalUid: string, imageUri: string) => {
+
+    }
+
     return (
         <Wrapper
             title={"FLAIM"}
@@ -57,9 +58,8 @@ export default function Feed() {
                     extraData={goalBeingCreated}
                     data={goalFeed}
                     renderItem={(goal) => <GoalPane inFeed={true} goal={goal.item} />}
-                    ItemSeparatorComponent={() => {
-                        return <Spacer space={3} />;
-                    }}
+                    ItemSeparatorComponent={() => <Spacer space={3} />}
+                    ListFooterComponent={() => <Spacer space={10} />}
                     keyExtractor={(item) => item.uid}
                     refreshControl={
                         <RefreshControl

@@ -90,7 +90,7 @@ export default function GoalPane(props: GoalPaneProps) {
                     }
                     {userCanPost &&
                         <TouchableOpacity
-                            onPress={() => router.push('/camera')}
+                            onPress={() => router.push({ pathname: "/camera", params: { goalUid: goal.uid, goalName: goal.name } })}
                             className='h-auto w-auto'
                         >
                             <IconButton
