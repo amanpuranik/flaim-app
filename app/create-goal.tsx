@@ -127,6 +127,7 @@ export default function CreateGoal() {
                 onlyColabsCanApprove: onlyColabCanApprove,
                 reward: rewardInput,
                 goalEndDate: Timestamp.fromDate(goalEndDateInput!),
+                createdBy: currentUser?.uid!,
                 updatedAt: Timestamp.now(),
                 createdAt: Timestamp.now(),
                 collaboratorUids: [collaboratorUid!, currentUser?.uid!],

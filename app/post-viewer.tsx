@@ -13,8 +13,6 @@ import { CommonActions } from "@react-navigation/native";
 import { generateUid } from './services/util';
 import FlatTextInput from './components/FlatTextInput';
 import { FirebaseStorage, StorageReference, getDownloadURL, getStorage, ref, uploadBytes, uploadString } from "firebase/storage";
-import { encode, decode } from "base-64"
-
 
 
 type PostViewerProps = {

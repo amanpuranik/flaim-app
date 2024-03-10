@@ -61,8 +61,14 @@ export const db_GetGoalFeed = async (currentUser: FlaimUser | undefined): Promis
         const q = query(goalsRef, where('collaboratorUids', 'array-contains-any', uids), orderBy("updatedAt", "desc"));
         const goalsSnapshot = await getDocs(q);
 
-        const goalList: Goal[] = await Promise.all(goalsSnapshot.docs.map(async (doc: DocumentSnapshot<DocumentData>) => {
+        const goalList: (Goal | undefined)[] = await Promise.all(goalsSnapshot.docs.map(async (doc: DocumentSnapshot<DocumentData>) => {
             const goalData = doc.data() as Goal;
+
+            // Check if onlyCollabCanView is true and currentUser is not a collaborator
+            if (goalData.onlyColabsCanView && !goalData.collaboratorUids.includes(currentUser.uid)) {
+                // Skip this goal
+                return;
+            }
 
             // Fetch approvals subcollection
             const approvalsRef = collection(doc.ref, 'approvals');
@@ -77,9 +83,11 @@ export const db_GetGoalFeed = async (currentUser: FlaimUser | undefined): Promis
             goalData.approvals = approvals;
             goalData.posts = posts;
 
+
             return goalData;
         }));
-        return goalList;
+
+        return goalList.filter(Boolean) as Goal[];
     }
     return [];
 };

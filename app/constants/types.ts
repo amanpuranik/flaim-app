@@ -31,6 +31,7 @@ export type Goal = {
     onlyColabsCanApprove: boolean;
     reward?: string;
     goalEndDate: Timestamp;
+    createdBy: string;
     updatedAt: Timestamp;
     createdAt: Timestamp;
 
