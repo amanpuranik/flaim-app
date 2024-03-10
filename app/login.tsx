@@ -53,7 +53,7 @@ export default function Login() {
       style={{ backgroundColor: clr.background }}
       className={`flex-1 justify-center items-center h-full w-full`}
     >
-      <View className="justify-center items-center w-11/12">
+      <View className="justify-center items-center w-full">
         <View className="flex-row items-center">
           <Text className="font-semibold" variant="displayMedium">
             Login

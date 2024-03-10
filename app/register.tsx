@@ -15,9 +15,17 @@ import useUserStore from "./services/store/userStore";
 import FlatTextInput from "./components/FlatTextInput";
 
 export default function Register() {
+
+  const [username, setUsername] = useState("");
+  const [isUsernameEmpty, setIsUsernameEmpty] = useState(false);
+
   const [email, setEmail] = useState("");
+  const [isEmailEmpty, setIsEmailEmpty] = useState(false);
+
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isPasswordEmpty, setIsPasswordEmpty] = useState(false);
+
+  // const [confirmPassword, setConfirmPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [regBtnText, setRegBtnText] = useState("Register");
@@ -32,9 +40,9 @@ export default function Register() {
   }, [loading]);
 
   async function register() {
-    if (email && password) {
+    if (email && password && username) {
       setLoading(true);
-      const response: AuthResponse = await signup(email, password);
+      const response: AuthResponse = await signup(email, password, username);
       if (response.error) {
         console.log(response.errorMessage);
         setRegError(response.errorMessage);
@@ -45,9 +53,9 @@ export default function Register() {
       }
       setLoading(false);
     } else {
-      setRegError(
-        "Please check your email, password, and password confirmation."
-      );
+      setIsEmailEmpty(!email);
+      setIsUsernameEmpty(!username);
+      setIsPasswordEmpty(!password);
     }
   }
 
@@ -57,7 +65,7 @@ export default function Register() {
       style={{ backgroundColor: clr.background }}
       className={`flex-1 justify-center items-center h-full w-full`}
     >
-      <View className="justify-center items-center w-11/12">
+      <View className="justify-center items-center w-full">
         <View className="flex-row items-center">
           <Text className="font-semibold" variant="displayMedium">
             Register
@@ -65,11 +73,34 @@ export default function Register() {
           <IconButton icon="account-plus" iconColor={clr.primary} size={48} />
         </View>
         <FlatTextInput
+          placeholder="Username..."
+          onBlur={() => {
+            if (username.length > 0) {
+              setIsUsernameEmpty(false);
+            }
+          }}
+          returnKeyType="done"
+          value={username}
+          onChangeText={(text) => setUsername(text)}
+          error={isUsernameEmpty}
+          errorText="Choose a username"
+          autoCapitalize="none"
+          autoComplete="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+        />
+        <FlatTextInput
           placeholder="Email..."
+          onBlur={() => {
+            if (email.length > 0) {
+              setIsEmailEmpty(false);
+            }
+          }}
           returnKeyType="done"
           value={email}
           onChangeText={(text) => setEmail(text)}
-          error={false}
+          error={isEmailEmpty}
+          errorText="Choose an email"
           autoCapitalize="none"
           autoComplete="email"
           textContentType="emailAddress"
@@ -77,10 +108,16 @@ export default function Register() {
         />
         <FlatTextInput
           placeholder="Password..."
+          onBlur={() => {
+            if (password.length > 0) {
+              setIsPasswordEmpty(false);
+            }
+          }}
           returnKeyType="done"
           value={password}
           onChangeText={(text) => setPassword(text)}
-          error={false}
+          error={isPasswordEmpty}
+          errorText="Choose a password"
           textContentType="newPassword"
           secureTextEntry
         />

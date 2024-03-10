@@ -1,11 +1,44 @@
-import { DocumentData, DocumentSnapshot, collection, doc, getDoc, getDocs, orderBy, query, setDoc, where } from "firebase/firestore";
+import { DocumentData, DocumentSnapshot, collection, doc, getDoc, getDocs, limit, or, orderBy, query, setDoc, where } from "firebase/firestore";
 import { auth, fs } from "../../../firebase";
 import { FlaimUser } from "../../constants/types";
 
+export const db_CheckUserExists = async (username: string, email: string) => {
+    const userExistsQuery =
+        query
+            (
+                collection(fs, 'users'),
+                or(
+                    where('username', '==', username),
+                    where('email', '==', email)
+                ),
+                limit(1)
+            );
+    const userExistsSnapshot = await getDocs(userExistsQuery);
+
+
+    if (!userExistsSnapshot.empty) {
+        const firstDoc = userExistsSnapshot.docs[0].data();
+
+        if (firstDoc.username === username) {
+            // Username already exists, throw an error with a specific code
+            const usernameError = new Error("Username already in use");
+            (usernameError as any).code = "auth/username-already-in-use";
+            throw usernameError;
+        }
+
+        if (firstDoc.email === email) {
+            // Email already exists, throw an error with a specific code
+            const emailError = new Error("Email already in use");
+            (emailError as any).code = "auth/email-already-in-use";
+            throw emailError;
+        }
+    }
+}
+
 //CREATE USER
 export const db_CreateUser = async (user: FlaimUser) => {
-    await setDoc(doc(fs, "users", auth.currentUser?.uid!), user);
-}
+    await setDoc(doc(fs, 'users', auth.currentUser?.uid!), user);
+};
 
 //Update a User
 export const db_UpdateUser = async (user: FlaimUser) => {

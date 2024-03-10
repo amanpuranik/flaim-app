@@ -4,16 +4,18 @@ import {
 } from "firebase/auth";
 import { auth } from "../../firebase";
 import { AuthResponse, FlaimUser } from "../constants/types";
-import { db_CreateUser } from "./db/userService";
+import { db_CheckUserExists, db_CreateUser } from "./db/userService";
 import useUserStore from "./store/userStore";
 import { Timestamp } from "firebase/firestore";
 
-export async function signup(email: string, password: string): Promise<AuthResponse> {
+export async function signup(email: string, password: string, username: string): Promise<AuthResponse> {
   try {
-    const user: FlaimUser = buildUserWithDefaultFields("username", "FIRST", "LAST", email);
+    //Checks if the username/email already exists. If it does then it throws an error which gets displayed in the register page
+    await db_CheckUserExists(username, email);
+
+    const user: FlaimUser = buildUserWithDefaultFields(username, "", "", email);
     const t = await createUserWithEmailAndPassword(auth, email, password);
     user.uid = auth.currentUser?.uid!;
-
     await db_CreateUser(user);
 
     return {
@@ -34,7 +36,10 @@ export async function signup(email: string, password: string): Promise<AuthRespo
         readableErrorMessage = "Email/password accounts are not enabled.";
         break;
       case "auth/weak-password":
-        readableErrorMessage = "Please choose a stronger password";
+        readableErrorMessage = "Please choose a stronger password.";
+        break;
+      case "auth/username-already-in-use":
+        readableErrorMessage = "The username is already being used.";
         break;
       default:
         readableErrorMessage = "An unexpected error occurred.";
