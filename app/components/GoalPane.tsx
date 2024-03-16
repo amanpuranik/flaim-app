@@ -55,7 +55,7 @@ export default function GoalPane(props: GoalPaneProps) {
                 borderColor: clr.surfaceVariant,
                 backgroundColor: clr.surfaceVariant
             }}
-            className='rounded-xl flex-1'>
+            className='rounded-xl'>
             <View>
                 {props.inFeed &&
                     <TouchableWithoutFeedback
@@ -91,7 +91,7 @@ export default function GoalPane(props: GoalPaneProps) {
                     {userCanPost &&
                         <TouchableOpacity
                             onPress={() => router.push({ pathname: "/camera", params: { goalUid: goal.uid, goalName: goal.name } })}
-                            className='h-auto w-auto'
+                            className='h-200 w-auto'
                         >
                             <IconButton
                                 icon={"camera"}

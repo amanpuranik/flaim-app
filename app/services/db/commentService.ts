@@ -8,7 +8,7 @@ export const db_AddComment = async (goalUid: string, newComment: GoalComment) =>
         const newCommentDoc = doc(fs, "goals", goalUid, "comments", newComment.uid);
         await setDoc(newCommentDoc, newComment);
     } catch (e: any) {
-        console.log("Couldn't add comment")
+        console.log("Couldn't add comment",e)
     }
 
 }
@@ -22,7 +22,7 @@ export const db_UpdateCommentLike = async (goalUid: string, commentUid: string, 
             { merge: true }
         )
     } catch (e: any) {
-        console.log("Couldn't update comment likes")
+        console.log("Couldn't update comment likes",e)
     }
 }
 

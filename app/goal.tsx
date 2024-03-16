@@ -6,12 +6,28 @@ import { router } from 'expo-router';
 import Comment from "./components/goals/comment";
 import FlatTextInput from './components/FlatTextInput';
 import GoalPane from './components/GoalPane';
-import { Goal } from './constants/types';
+import { FlaimUser, Goal } from './constants/types';
 import { db_GetGoal } from './services/db/goalService';
+import { db_AddComment } from './services/db/commentService';
+import { GoalComment } from './constants/types';
+import { Timestamp } from 'firebase/firestore';
+import { generateUid } from './services/util'
+import { db_GetCurrentUser } from './services/db/userService';
+
+
 import { useLocalSearchParams } from 'expo-router';
 
 
 export default function GoalPage() {
+
+  const comment: GoalComment = {
+    uid: '1',
+    userUid: 'CbMiOMH4iLQacGJG5d7YyzgdJOT2',
+    comment: 'Some comment',
+    createdAt: Timestamp.now(),
+    likes: []
+  };
+
   let clr = useTheme().colors;
 
   //Set in GoalPane when routing
@@ -21,51 +37,25 @@ export default function GoalPage() {
 
   const [goal, setGoal] = useState<Goal>();
   const [goalLoading, setGoalLoading] = useState(true);
+  const [comments, setComments] = useState<GoalComment[]>([]);
+  const [textInputValue, setTextInputValue] = useState('');
+  const [user, setCurrentUser] = useState<FlaimUser>();
 
-  const dummyComments = [
-    {
-      name: "aaliyan 'short pants' kapadia",
-      comment: "this is a comment",
-      liked: true
-    },
-    {
-      name: "omar `fatfuck` hamuda",
-      comment: "woahhh"
-    },
-    {
-      name: "Aman",
-      comment: "good progredss!",
-      liked: true
-    },
-    {
-      name: "aaliyan 'short pants' kapadia",
-      comment: "this is a comment"
-    },
-    {
-      name: "aaliyan 'short pants' kapadia",
-      comment: "this is a comment",
-      liked: true
-    },
-    {
-      name: "omar `fatfuck` hamuda",
-      comment: "woahhh"
-    },
-    {
-      name: "Aman",
-      comment: "good progredss!",
-      liked: true
-    },
-    {
-      name: "aaliyan 'short pants' kapadia",
-      comment: "this is a comment"
-    }
-  ];
+
+
+
+  const handleTextInputChange = (text:string) => {
+    setTextInputValue(text);
+  };
+
 
   useEffect(() => {
     db_GetGoal(goalUid)
       .then((goal) => {
+
         setGoal(goal);
         setGoalLoading(false);
+        setComments(goal?.comments || []);
       })
       .catch((e: any) => {
         console.log("Couldn't get goal");
@@ -73,25 +63,55 @@ export default function GoalPage() {
       })
   }, [])
 
-  const submitComment = () => {
-    console.log("submit comment")
-  }
+  useEffect(() => {
+    db_GetCurrentUser()
+      .then((user) => {
+        setCurrentUser(user)
+      })
+
+  }, [])
+
+  const updateGoal = (updatedGoal: any) => {
+    setGoal(updatedGoal);
+  };
+
+  const userUid: string = user?.uid ?? '';
 
 
-  const renderComments = () => {
-    console.log("rendering commentss");
+  const submitComment = async () => {
+    // Check if the comment is not empty
+    if (textInputValue.trim() === "") {
+      return;
+    }
 
-    return (
-      <View style={{ marginTop: 20, alignItems: 'flex-start', display: 'flex', flexDirection: "column", flex: 1, height: 2000 }}>
+    setTextInputValue("")
 
-        {dummyComments.map((comment, index) => (
+    // Create the new comment object
+    const newComment: GoalComment = {
+      uid: generateUid(),
+      userUid: userUid,
+      comment: textInputValue.trim(),
+      createdAt: Timestamp.now(),
+      likes: [],
+    };
 
-          <Comment data={comment} index={index} key={index} />
-        ))}
+    // Update the goal state with the new comment
+    setGoal((prevGoal) => ({
+      ...prevGoal,
+      comments: prevGoal.comments ? [...prevGoal.comments, newComment] : [newComment],
+    }));
 
-      </View>
-    );
-  }
+    // Call db_AddComment and await its completion
+    try {
+      await db_AddComment(goal ? goal.uid : "", newComment);
+      console.log("Comment added successfully");
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+
+
+
 
   return (
     <Wrapper
@@ -103,36 +123,41 @@ export default function GoalPage() {
     >
       <ScrollView
         className="flex-1"
-        style={{ flex: 1, }}
-        contentOffset={{ x: 0, y: 0 }}
         scrollEnabled={true}
 
       >
         <View className="items-centerx w-full" style={{ alignItems: 'flex-start', display: 'flex', flexDirection: "column", flex: 1 }}>
           <View className='w-full px-2'>
-            {goalLoading &&
-              <View className='h-96 items-center justify-center'>
-                <ActivityIndicator />
-              </View>
-            }
-            {!goalLoading && goal && <GoalPane goal={goal} inFeed={false} />}
+            <View>
+              {goalLoading &&
+                <View className='h-200 items-center justify-center'>
+                  <ActivityIndicator />
+                </View>
+              }
+              {!goalLoading && goal && <GoalPane goal={goal} inFeed={false} />}
+            </View>
           </View>
-          <View style={{ marginTop: 20, alignItems: 'flex-start', display: 'flex', flexDirection: "column", flex: 1 }}>
+          <View style={{ marginTop: 20, alignItems: 'flex-start', display: 'flex', flexDirection: "column", width: "100%" }}>
 
-            {dummyComments.map((comment, index) => (
-
-              <Comment data={comment} index={index} key={index} />
+            {!goalLoading && goal && goal.comments && goal.comments.map((comment, index) => (
+              <Comment updateGoal={updateGoal} data={comment} index={index} key={index} goalData={goal} likes={comment.likes} />
             ))}
+
           </View>
         </View>
 
       </ScrollView>
-      <FlatTextInput placeholder='Leave a comment' right={
-        <TextInput.Icon
-          icon="send"
-          onPress={submitComment}
-        />
-      } />
+      <FlatTextInput
+        placeholder='Leave a comment'
+        value={textInputValue}
+        onChangeText={handleTextInputChange}
+        right={
+          <TextInput.Icon
+            icon="send"
+            onPress={submitComment}
+          />
+        }
+      />
 
     </Wrapper >
   );
