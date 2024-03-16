@@ -6,21 +6,57 @@ interface ItemsListProps {
   name: string;
   username: string;
   onRemove: () => void;
-  listType?: "friends" | "requests" | "mutuals";
+  profilePicture: string;
+  listType: string;
 }
 
 const ItemsList: React.FC<ItemsListProps> = ({
   name,
   username,
   onRemove,
+  profilePicture,
   listType,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+
   let clr = useTheme().colors;
+  const handleAddPress = () => {
+    setIsAdded(!isAdded);
+    // Send request from here
+  };
+
+  const renderDeleteMessage = () => {
+    if (listType === "friends") {
+      return `Are you sure you want to remove ${name} from your friends?`;
+    } else if (listType === "requests") {
+      return `Are you sure you want to remove ${name} from your requests?`;
+    }
+    return `Are you sure you want to remove ${name} from your mutuals?`;
+  };
+
+  const renderAddBadges = () => {
+    if (listType !== "friends") {
+      return !isAdded ? (
+        <TouchableOpacity
+          onPress={handleAddPress}
+          className="bg-black px-3 py-2 rounded-full mr-1"
+        >
+          <Text className="text-white text-xs">ADD</Text>
+        </TouchableOpacity>
+      ) : (
+        <View className="bg-gray-800 px-3 py-2 rounded-full mr-1">
+          <Text className="text-white text-xs">ADDED</Text>
+        </View>
+      );
+    }
+  };
 
   return (
     <>
-      <View className={`flex-row items-center rounded-lg ml-5 mr-3 mb-3`}>
+      <View
+        className={`flex-row justify-between items-center rounded-lg ml-5 mr-3 mb-3`}
+      >
         <View className={`flex-row items-center`}>
           <Image
             className={`w-12 h-12 rounded-full mr-4`}
@@ -33,13 +69,16 @@ const ItemsList: React.FC<ItemsListProps> = ({
             <Text style={{ color: clr.secondary }}>{username}</Text>
           </View>
         </View>
-        <IconButton
-          icon="close"
-          size={15}
-          onPress={() => setModalVisible(true)}
-          style={{ backgroundColor: "transparent" }}
-          className="ml-auto"
-        />
+        <View className="flex-row items-center">
+          {renderAddBadges()}
+          <IconButton
+            icon="close"
+            size={15}
+            onPress={() => setModalVisible(true)}
+            style={{ backgroundColor: "transparent" }}
+            className="ml-auto"
+          />
+        </View>
       </View>
 
       <Modal
@@ -48,26 +87,48 @@ const ItemsList: React.FC<ItemsListProps> = ({
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View className={`flex-1 justify-center items-center px-4`}>
-          <View className={`bg-white w-full rounded-xl p-4`}>
-            <Text className={`text-lg text-center mb-4`}>
-              Are you sure you want to remove {name}?
+        <View className="flex-1 justify-center items-center px-3">
+          <IconButton
+            icon="close"
+            size={20}
+            onPress={() => setModalVisible(false)}
+            style={{
+              position: "absolute",
+              zIndex: 10,
+              top: 312,
+              right: 10,
+              backgroundColor: "transparent",
+            }}
+          />
+          <View
+            className="w-full rounded-xl p-4"
+            style={{ backgroundColor: clr.primaryContainer }}
+          >
+            <Image
+              className="m-auto"
+              source={require("../../../assets/images/favicon.png")} // Replace with actual image URI
+            />
+            <Text
+              className="text-lg text-center mb-4"
+              style={{ color: clr.onPrimaryContainer }}
+            >
+              {renderDeleteMessage()}
             </Text>
-            <View className={`flex-row justify-evenly`}>
-              <TouchableOpacity
-                onPress={() => setModalVisible(false)}
-                className={`bg-gray-300 p-2 rounded-lg`}
-              >
-                <Text className={`text-lg`}>Cancel</Text>
-              </TouchableOpacity>
+            <View className="flex-row justify-evenly">
               <TouchableOpacity
                 onPress={() => {
                   onRemove();
                   setModalVisible(false);
                 }}
-                className={`bg-red-500 p-2 rounded-lg`}
+                style={{ backgroundColor: clr.errorContainer }}
+                className="p-2 rounded-lg"
               >
-                <Text className={`text-lg text-white`}>Remove</Text>
+                <Text
+                  className="text-lg"
+                  style={{ color: clr.onErrorContainer }}
+                >
+                  Remove
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

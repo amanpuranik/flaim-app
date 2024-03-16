@@ -48,7 +48,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({ onTabPress, scrollX }) => {
             backgroundColor: clr.secondaryContainer,
           },
         ]}
-        className="absolute bottom-0 h-full rounded-[10px] "
+        className="absolute bottom-0 h-full rounded-[10px]"
       />
       {["Friends", "Requests", "Mutuals"].map((tab, index) => (
         <TouchableOpacity
@@ -56,7 +56,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({ onTabPress, scrollX }) => {
           onPress={() => onTabPress(index)}
           className="flex-1 items-center p-[10px]"
         >
-          <Text style={{ color: clr.primary }}>{tab}</Text>
+          <Text style={{ color: clr.onPrimaryContainer }}>{tab}</Text>
         </TouchableOpacity>
       ))}
     </View>
