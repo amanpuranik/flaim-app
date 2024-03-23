@@ -9,6 +9,8 @@ import {
   ToastPosition,
   Toasts,
 } from "@backpackapp-io/react-native-toast";
+import useUserStore from './services/store/userStore'
+
 
 export default function profile() {
   const handleCopyText = async () => {
@@ -19,6 +21,9 @@ export default function profile() {
       position: ToastPosition.BOTTOM,
     });
   };
+
+  const { currentUser } = useUserStore();
+
 
   const renderGoals = () => {
     return (
@@ -53,14 +58,13 @@ export default function profile() {
           size={96}
         />
 
-        <Text className="pt-4">bio will go here </Text>
-        <View className="flex-col flex">
-          <Button icon="content-copy" onPress={handleCopyText}>
-            <Text className="pt-1">Link to profile</Text>
-          </Button>
+        <View className="flex-col flex items-center">
+          <Text className="pt-4">{currentUser?.username}</Text>
+          <Text className="pt-4">{currentUser?.bio}</Text>
           <Button
             icon="pencil-outline"
             onPress={() => router.push("/edit-profile")}
+            className="pt-2"
           >
             <Text>Edit profile</Text>
           </Button>
