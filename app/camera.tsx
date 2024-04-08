@@ -14,9 +14,15 @@ export default function camera() {
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const cameraRef = useRef<Camera>(null);
 
+
     const params = useLocalSearchParams();
-    const goalName = params.goalName.toString();
-    const goalUid = params.goalUid.toString();
+    console.log(params)
+
+    const goalName = params.goalName?.toString();
+    const goalUid = params.goalUid?.toString();
+    const profile = params.profile?.toString()
+
+    
 
     if (!permission) {
         // Camera permissions are still loading
@@ -49,7 +55,17 @@ export default function camera() {
                             params: { uri: photo.uri, photoWidth: photo.width.toString(), goalUid: goalUid, goalName: goalName }
                         })
                     }
-                } else {
+                    else if (profile){
+                        //have to tweak the part where a pic is acc taken 
+                        router.push("/edit-profile")
+                        console.log("from the profile")
+                    }
+                } 
+
+                // else if profile picture, take to profile pictuer screen 
+                
+                
+                else {
                     console.warn('Failed to capture picture');
                 }
             } catch (error) {

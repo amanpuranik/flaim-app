@@ -58,7 +58,7 @@ export default function PostViewer(props: PostViewerProps) {
         processImage();
     }, [uri]);
 
-    const postImage = async () => {
+    const postImage = async () => { //image posted
         setPosting(true);
 
         if (squaredImageUri && currentUser) {

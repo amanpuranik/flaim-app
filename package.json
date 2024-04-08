@@ -19,6 +19,7 @@
     "expo-camera": "~13.4.4",
     "expo-constants": "~14.4.2",
     "expo-image-manipulator": "~11.3.0",
+    "expo-image-picker": "^14.7.1",
     "expo-linking": "~5.0.2",
     "expo-navigation-bar": "~2.3.0",
     "expo-router": "^2.0.0",
