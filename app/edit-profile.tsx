@@ -158,6 +158,7 @@ export default function editProfile() {
                     profilePictureUrl: downloadUrl
                 }
                 await db_UpdateUser(updatedUser)
+                setProfilePic(downloadUrl)
 
                 console.log("uploaded")
 
