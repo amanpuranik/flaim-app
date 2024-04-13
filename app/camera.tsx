@@ -13,6 +13,7 @@ export default function camera() {
     const [type, setType] = useState(CameraType.back);
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const cameraRef = useRef<Camera>(null);
+    const [preview, setPreview] = useState(false)
 
 
     const params = useLocalSearchParams();
@@ -22,7 +23,7 @@ export default function camera() {
     const goalUid = params.goalUid?.toString();
     const profile = params.profile?.toString()
 
-    
+
 
     if (!permission) {
         // Camera permissions are still loading
@@ -55,16 +56,18 @@ export default function camera() {
                             params: { uri: photo.uri, photoWidth: photo.width.toString(), goalUid: goalUid, goalName: goalName }
                         })
                     }
-                    else if (profile){
+                    else if (profile) {
                         //have to tweak the part where a pic is acc taken 
-                        router.push("/edit-profile")
-                        console.log("from the profile")
+                        router.push({
+                            pathname: "/edit-profile",
+                            params: { uri: photo.uri, editProfile: "true" }
+                        })                    
                     }
-                } 
+                }
 
                 // else if profile picture, take to profile pictuer screen 
-                
-                
+
+
                 else {
                     console.warn('Failed to capture picture');
                 }
@@ -98,12 +101,55 @@ export default function camera() {
 
                 </View>
                 <View style={styles.buttonContainer}>
-                    <IconButton
-                        icon="circle-outline"
-                        size={72}
-                        onPress={takePictureAsync}
-                        style={styles.button}
-                    />
+
+                    {!preview ? (
+
+                        <IconButton
+                            icon="circle-outline"
+                            size={72}
+                            onPress={() => {
+                                cameraRef.current?.pausePreview()
+                                setPreview(true)
+                            }}                           
+                             style={styles.button}
+                        />
+
+
+                    ) : (
+                        <>
+
+                            <IconButton
+                                icon="close"
+                                size={40}
+                                onPress={() => {
+                                    cameraRef.current?.resumePreview()
+                                    setPreview(false)
+                                }}
+                                style={styles.button}
+
+                            />
+
+                            <IconButton
+                                icon="check"
+                                size={40}
+                                style={styles.button}
+                                onPress={()=>{
+                                    takePictureAsync();
+                                }}
+                                // call  takepicturesynchere
+
+                            />
+
+                        </>
+
+
+
+
+                    )
+
+
+                    }
+
 
                     {/* <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
                         <Text style={styles.text}>Flip Camerab</Text>
@@ -132,7 +178,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         backgroundColor: 'transparent',
-        margin: 64,
+        justifyContent: 'space-between',
+        gap: 190
     },
     button: {
         flex: 1,

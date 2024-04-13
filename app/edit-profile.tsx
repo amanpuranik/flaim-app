@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Text, IconButton, useTheme } from 'react-native-paper';
 import Wrapper from './components/Wrapper';
+import { useLocalSearchParams } from 'expo-router';
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { router } from "expo-router";
 import { Avatar } from 'react-native-paper';
@@ -38,6 +39,10 @@ export default function editProfile() {
     const [currentUser, setCurrentUser] = useState<FlaimUser>();
     const { showActionSheetWithOptions } = useActionSheet();
 
+    const params = useLocalSearchParams();
+    const editProfile = params.editProfile?.toString();
+    const uri = params.uri?.toString();
+
 
 
     useEffect(() => {
@@ -63,8 +68,12 @@ export default function editProfile() {
             setProfilePic(user?.profilePictureUrl)
         })
 
+        if (editProfile) {
+            takeFromCamera();
 
-    }, []);
+        }
+
+    }, [params]);
 
 
     const onPress = () => {
@@ -78,7 +87,6 @@ export default function editProfile() {
         }, (selectedIndex) => {
             switch (selectedIndex) {
                 case 0:
-                    console.log('case1')
                     openCamera();
                     break;
 
@@ -100,7 +108,6 @@ export default function editProfile() {
 
 
     const updateProfilePic = async (photo: string) => {
-        console.log("update profile")
         const updatedUser = {
             ...currentUser,
             profilePictureUrl: photo
@@ -118,8 +125,47 @@ export default function editProfile() {
                 width: 300,
                 position: ToastPosition.BOTTOM
             });
-            console.log(error, "error")
         }
+
+    }
+
+    const takeFromCamera = async () => {
+
+        // take pic from camera logic here 
+
+        const response = await fetch(uri)
+        const blob = await response.blob();
+
+        const storage = getStorage();
+        const imageRef = ref(storage, 'images/' + "profilePic" + '.jpg');
+
+        try {
+            const snapshot = await uploadBytesResumable(imageRef, blob);
+            const downloadUrl = await getDownloadURL(snapshot.ref);
+
+
+            const updatedUser = {
+                ...currentUser,
+                profilePictureUrl: downloadUrl
+            }
+            await db_UpdateUser(updatedUser)
+
+            setProfilePic(downloadUrl)
+
+            toast.success("Profile pic has been changed", {
+                width: 300,
+                position: ToastPosition.BOTTOM
+            });
+
+
+
+
+
+
+        } catch (error) {
+            console.error("Error uploading image:", error);
+        }
+
 
     }
 
@@ -141,15 +187,11 @@ export default function editProfile() {
             const storage = getStorage();
             const imageRef = ref(storage, 'images/' + fileName + '.jpg');
 
-            console.log("started")
 
 
-            // crashes here
             try {
-                console.log("upload started")
                 const snapshot = await uploadBytesResumable(imageRef, blob);
                 const downloadUrl = await getDownloadURL(snapshot.ref);
-                console.log(downloadUrl, "download url log")
 
                 // actual upload to firebase happenign here 
 
@@ -160,7 +202,6 @@ export default function editProfile() {
                 await db_UpdateUser(updatedUser)
                 setProfilePic(downloadUrl)
 
-                console.log("uploaded")
 
             } catch (error) {
                 console.error("Error uploading image:", error);
@@ -210,7 +251,6 @@ export default function editProfile() {
             bio: bioInput ? bioInput : currentUser?.bio
         }
 
-        console.log(currentUser, updatedUser)
 
 
         try {
@@ -225,7 +265,6 @@ export default function editProfile() {
                 width: 300,
                 position: ToastPosition.BOTTOM
             });
-            console.log(error, "error")
         }
 
 
@@ -239,7 +278,7 @@ export default function editProfile() {
             <View className="items-center h-full w-full flex flex-col">
                 {/* <Avatar.Icon icon="camera" size={96} label="AP" /> */}
                 <View style={{ position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
-                    <Avatar.Image source={{uri: profilePic}} size={96} />
+                    <Avatar.Image source={{ uri: profilePic }} size={96} />
 
                     <TouchableOpacity
                         onPress={onPress}
