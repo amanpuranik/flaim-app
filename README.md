@@ -14,4 +14,14 @@
 - 2 students agreeing to study everyday for a month consistently. The students would then be prompted to upload a picture of them actually studying
 
 
+**Demo**
+
+https://github.com/amanpuranik/flaim-app/assets/56619430/fecd26a9-5945-4422-a218-cfaa81623120
+
+https://github.com/amanpuranik/flaim-app/assets/56619430/76f2403f-ff20-4c6a-b382-8ca4d982675f
+
+https://github.com/amanpuranik/flaim-app/assets/56619430/fe59dad4-1b30-46cb-b5ff-f75160a74640
+
+<img width="691" alt="Screenshot 2024-06-08 at 4 34 21 PM" src="https://github.com/amanpuranik/flaim-app/assets/56619430/365f3017-3a41-4e0e-9862-1a7b2dfcf6cc">
+
 
